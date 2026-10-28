@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://c0klpfbdji3fy"]
 
-[ext_resource type="Script" uid="uid://cni0024nf81yg" path="res://Scripts/slime.gd" id="1_jokqx"]
+[ext_resource type="Script" uid="uid://on5ntedt7hnc" path="res://Scripts/slime.gd" id="1_jokqx"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_3mqfk"]
 
@@ -30,5 +30,5 @@ scale = Vector2(0.107, 0.107)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1314686858]
 position = Vector2(152, 368)
-scale = Vector2(3.2, 3.2)
+scale = Vector2(3.19, 3.19)
 shape = SubResource("RectangleShape2D_swwnm")

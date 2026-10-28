@@ -1,4 +1,4 @@
-extends Node2D
+extends CharacterBody2D
 
 var green_slime = preload("res://Assets/green-slime.png")
 var blue_slime = preload("res://Assets/blue-slime.png")
@@ -34,8 +34,12 @@ func get_input():
 		move_one_tile(direction)
 
 func move_one_tile(direction: Vector2i):
-	is_moving = true
 	var offset = Vector2(direction * tile_size)
+	#checks for collisions by taking object's position and how far it will move
+	if test_move(global_transform, offset):
+		return
+	
+	is_moving = true
 	var tween = create_tween()
 	tween.tween_property(self, "global_position", global_position + offset, move_time)
 	await tween.finished
