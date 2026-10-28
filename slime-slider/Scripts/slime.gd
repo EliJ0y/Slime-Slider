@@ -34,14 +34,28 @@ func get_input():
 		move_one_tile(direction)
 
 func move_one_tile(direction: Vector2i):
+	#e.g. Vector2i.UP is (0, -1) so this will be (0, -64) and only moves in the one direction i want
 	var offset = Vector2(direction * tile_size)
-	#checks for collisions by taking object's position and how far it will move
-	if test_move(global_transform, offset):
-		return
+	var collision = KinematicCollision2D.new()
 	
+	#checks for collisions by taking object's position and how far it will move
+	if test_move(global_transform, offset, collision):
+		var collided_object = collision.get_collider()
+		if collided_object is CharacterBody2D:
+			#move other slime first so controlled slime's global position hasnt updated yet
+			collided_object.move_animation(global_position)
+			#then move the controlled slime like normal
+			move_animation(global_position + offset)
+			return
+		else:
+			return
+	#if no collision, move controlled slime like normal
+	move_animation(global_position + offset)
+
+func move_animation(target_position: Vector2):
 	is_moving = true
 	var tween = create_tween()
-	tween.tween_property(self, "global_position", global_position + offset, move_time)
+	tween.tween_property(self, "global_position", target_position, move_time)
 	await tween.finished
 	is_moving = false
 
