@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://dwabxrcbtrokp"]
+
+[ext_resource type="Script" uid="uid://c3mhqtn1kgf0h" path="res://Scripts/game_manager.gd" id="1_oj352"]
+
+[node name="Game Manager" type="Node2D" unique_id=421157100]
+script = ExtResource("1_oj352")

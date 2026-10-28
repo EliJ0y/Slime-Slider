@@ -1,10 +1,20 @@
-extends CharacterBody2D
+extends Node2D
+
+var green_slime = preload("res://Assets/green-slime.png")
+var blue_slime = preload("res://Assets/blue-slime.png")
+var yellow_slime = preload("res://Assets/yellow-slime.png")
+
+var slime_colours: Array = [green_slime, blue_slime, yellow_slime]
+@export var slime_colour: int
 
 const tile_size = 64
 const move_time = 0.2
 
 var is_moving = false
-var is_controlled = false
+
+func _ready() -> void:
+	$"Slime Sprite".texture = slime_colours[slime_colour]
+	set_physics_process(false)
 
 func get_input():
 	if is_moving:
@@ -30,6 +40,12 @@ func move_one_tile(direction: Vector2i):
 	tween.tween_property(self, "global_position", global_position + offset, move_time)
 	await tween.finished
 	is_moving = false
+
+func on_slime_selected():
+	set_physics_process(true)
+
+func unselect_slime():
+	set_physics_process(false)
 
 func _physics_process(delta: float) -> void:
 	get_input()
