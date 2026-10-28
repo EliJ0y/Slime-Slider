@@ -5,5 +5,8 @@ The gameplay centres around fast reaction time and movement. Click quickly on th
 
 This game is playable on the web, on itch.io at __ (will add the link later)
 
+<img width="325" height="550" alt="Screenshot 2026-10-28 at 9 37 07 PM" src="https://github.com/user-attachments/assets/c0fb74e4-47d2-4829-b726-1c5fb2759f60" />
+
+
 The tilemap I used was all from here: https://fliegevogel.itch.io/tinyworld
 Currently, the slimes are just the Minecraft slime and recoloured versions of it
