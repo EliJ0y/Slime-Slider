@@ -1190,7 +1190,6 @@ physics_layer_0/collision_layer = 1
 sources/0 = SubResource("TileSetAtlasSource_3mqfk")
 
 [node name="Level 1" type="Node2D" unique_id=1685067880]
-position = Vector2(8, 0)
 script = ExtResource("1_tlcug")
 
 [node name="TileMapLayer" type="TileMapLayer" parent="." unique_id=670428057]
@@ -1201,14 +1200,39 @@ tile_set = SubResource("TileSet_4kxuq")
 [node name="Slimes" type="Node" parent="." unique_id=919596169]
 
 [node name="Slime" parent="Slimes" unique_id=1628136711 instance=ExtResource("3_3mqfk")]
-position = Vector2(8, 0)
+position = Vector2(152, 368)
 
 [node name="Slime2" parent="Slimes" unique_id=877921317 instance=ExtResource("3_3mqfk")]
-position = Vector2(72, 0)
+position = Vector2(216, 368)
 slime_colour = 1
 
 [node name="Slime3" parent="Slimes" unique_id=1696226638 instance=ExtResource("3_3mqfk")]
-position = Vector2(136, 0)
+position = Vector2(280, 368)
+slime_colour = 2
+
+[node name="Slime4" parent="Slimes" unique_id=1487584656 instance=ExtResource("3_3mqfk")]
+position = Vector2(344, 368)
+slime_colour = 2
+
+[node name="Slime5" parent="Slimes" unique_id=1606436373 instance=ExtResource("3_3mqfk")]
+position = Vector2(408, 368)
+
+[node name="Slime6" parent="Slimes" unique_id=593806081 instance=ExtResource("3_3mqfk")]
+position = Vector2(152, 432)
+slime_colour = 1
+
+[node name="Slime7" parent="Slimes" unique_id=938872208 instance=ExtResource("3_3mqfk")]
+position = Vector2(216, 432)
+
+[node name="Slime8" parent="Slimes" unique_id=1756164096 instance=ExtResource("3_3mqfk")]
+position = Vector2(280, 432)
+
+[node name="Slime9" parent="Slimes" unique_id=2074644890 instance=ExtResource("3_3mqfk")]
+position = Vector2(344, 432)
+slime_colour = 1
+
+[node name="Slime10" parent="Slimes" unique_id=1160487204 instance=ExtResource("3_3mqfk")]
+position = Vector2(408, 432)
 slime_colour = 2
 
 [node name="Game Manager" parent="." unique_id=421157100 instance=ExtResource("4_iixi8")]

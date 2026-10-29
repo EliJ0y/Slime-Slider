@@ -1,6 +1,8 @@
 [gd_scene format=3 uid="uid://c0klpfbdji3fy"]
 
 [ext_resource type="Script" uid="uid://on5ntedt7hnc" path="res://Scripts/slime.gd" id="1_jokqx"]
+[ext_resource type="Texture2D" uid="uid://d4gj5l5rd82ye" path="res://Assets/blue-slime.png" id="2_aiwxb"]
+[ext_resource type="Texture2D" uid="uid://dwxlti4md1rt6" path="res://Assets/White border.png" id="3_paq7w"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_3mqfk"]
 
@@ -15,20 +17,23 @@ size = Vector2(20, 19.999992)
 script = ExtResource("1_jokqx")
 
 [node name="Slime Button" type="Button" parent="." unique_id=1183849100]
-offset_left = 120.0
-offset_top = 336.0
-offset_right = 128.0
-offset_bottom = 344.0
+offset_left = -32.0
+offset_top = -32.0
+offset_right = -24.0
+offset_bottom = -24.0
 scale = Vector2(8, 8)
 theme_override_styles/normal = SubResource("StyleBoxEmpty_3mqfk")
 theme_override_styles/pressed = SubResource("StyleBoxEmpty_iixi8")
 theme_override_styles/hover = SubResource("StyleBoxEmpty_cyadu")
 
 [node name="Slime Sprite" type="Sprite2D" parent="." unique_id=711124920]
-position = Vector2(152, 368)
 scale = Vector2(0.107, 0.107)
+texture = ExtResource("2_aiwxb")
+
+[node name="White Border" type="Sprite2D" parent="." unique_id=434014056]
+scale = Vector2(0.58000004, 0.58000004)
+texture = ExtResource("3_paq7w")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1314686858]
-position = Vector2(152, 368)
-scale = Vector2(3.19, 3.19)
+scale = Vector2(3.15, 3.15)
 shape = SubResource("RectangleShape2D_swwnm")
