@@ -6,6 +6,7 @@ var slime = preload("res://Scenes/slime.tscn")
 
 var slimes: Array
 var controlled_slime
+var general_matches_made
 
 func _ready() -> void:
 	$"../CanvasLayer/Time Left Value".text = str(level_settings.level_time)
@@ -16,7 +17,16 @@ func _ready() -> void:
 		slime_button.connect("pressed", on_slime_clicked)
 		slime.connect("stopped_glowing", on_slime_stopped_glowing) #gets the signal from slime.gd
 		slime.glow_time = level_settings.glow_time
+
+	await get_tree().create_timer(1.0).timeout
+	pick_glowing_slimes()
 	glowing_slime_cycle()
+
+func _process(delta: float) -> void:
+	if level_settings.level_time > 0:
+		level_settings.level_time -= delta
+		$"../CanvasLayer/Time Left Value".text = str(roundi(level_settings.level_time))
+	win_or_lose()
 
 func spawn_slimes():
 	for x in range(160, 417, 64):
@@ -50,7 +60,7 @@ func pick_glowing_slimes():
 
 func glowing_slime_cycle():
 	#gets called in ready and runs during the level to continually pick new glowing slimes
-	while true:
+	while level_settings.level_time > 4:
 		await get_tree().create_timer(level_settings.pick_glow_interval).timeout
 		pick_glowing_slimes()
 
@@ -59,3 +69,10 @@ func on_slime_stopped_glowing(slime):
 	if slime == controlled_slime:
 		controlled_slime.unselect_slime()
 		controlled_slime = null
+
+func win_or_lose():
+	if level_settings.level_time <= 0:
+		#if general_matches_made >= level_settings.general_matches:
+			$"../You Win Screen".visible = true
+		#else:
+			#$"../Game Over Screen".visible = true

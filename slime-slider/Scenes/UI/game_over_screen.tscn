@@ -1,0 +1,30 @@
+[gd_scene format=3 uid="uid://duy1e72p13lx4"]
+
+[node name="Game Over Screen" type="Node2D" unique_id=1573366527]
+z_index = 1
+
+[node name="Panel" type="Panel" parent="." unique_id=1337645044]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 576.0
+offset_bottom = 1024.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Game Over Text" type="Label" parent="." unique_id=135838513]
+offset_left = 48.0
+offset_top = 272.0
+offset_right = 528.0
+offset_bottom = 382.0
+theme_override_font_sizes/font_size = 80
+text = "GAME OVER!"
+horizontal_alignment = 1
+
+[node name="Retry Button" type="Button" parent="." unique_id=90793528]
+offset_left = 177.0
+offset_top = 422.0
+offset_right = 391.0
+offset_bottom = 540.0
+theme_override_font_sizes/font_size = 60
+text = "Retry"
