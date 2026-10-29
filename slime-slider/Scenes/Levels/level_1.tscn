@@ -1,9 +1,22 @@
 [gd_scene format=4 uid="uid://cvx0s0eefsdkn"]
 
-[ext_resource type="Script" uid="uid://5u5hfbnoid7n" path="res://Scripts/Levels/level_1.gd" id="1_tlcug"]
 [ext_resource type="Texture2D" uid="uid://50iagn18g2o4" path="res://Assets/BaseSet.png" id="2_4dpyx"]
-[ext_resource type="PackedScene" uid="uid://c0klpfbdji3fy" path="res://Scenes/slime.tscn" id="3_3mqfk"]
+[ext_resource type="Resource" uid="uid://ddn5pc76ojmba" path="res://Resources/level_1.tres" id="4_cyadu"]
 [ext_resource type="PackedScene" uid="uid://dwabxrcbtrokp" path="res://Scenes/game_manager.tscn" id="4_iixi8"]
+
+[sub_resource type="GDScript" id="GDScript_3mqfk"]
+script/source = "extends Node2D
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta: float) -> void:
+	pass
+"
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_3mqfk"]
 texture = ExtResource("2_4dpyx")
@@ -1190,7 +1203,8 @@ physics_layer_0/collision_layer = 1
 sources/0 = SubResource("TileSetAtlasSource_3mqfk")
 
 [node name="Level 1" type="Node2D" unique_id=1685067880]
-script = ExtResource("1_tlcug")
+position = Vector2(8, 0)
+script = SubResource("GDScript_3mqfk")
 
 [node name="TileMapLayer" type="TileMapLayer" parent="." unique_id=670428057]
 position = Vector2(-328, 144)
@@ -1199,41 +1213,24 @@ tile_set = SubResource("TileSet_4kxuq")
 
 [node name="Slimes" type="Node" parent="." unique_id=919596169]
 
-[node name="Slime" parent="Slimes" unique_id=1628136711 instance=ExtResource("3_3mqfk")]
-position = Vector2(152, 368)
-
-[node name="Slime2" parent="Slimes" unique_id=877921317 instance=ExtResource("3_3mqfk")]
-position = Vector2(216, 368)
-slime_colour = 1
-
-[node name="Slime3" parent="Slimes" unique_id=1696226638 instance=ExtResource("3_3mqfk")]
-position = Vector2(280, 368)
-slime_colour = 2
-
-[node name="Slime4" parent="Slimes" unique_id=1487584656 instance=ExtResource("3_3mqfk")]
-position = Vector2(344, 368)
-slime_colour = 2
-
-[node name="Slime5" parent="Slimes" unique_id=1606436373 instance=ExtResource("3_3mqfk")]
-position = Vector2(408, 368)
-
-[node name="Slime6" parent="Slimes" unique_id=593806081 instance=ExtResource("3_3mqfk")]
-position = Vector2(152, 432)
-slime_colour = 1
-
-[node name="Slime7" parent="Slimes" unique_id=938872208 instance=ExtResource("3_3mqfk")]
-position = Vector2(216, 432)
-
-[node name="Slime8" parent="Slimes" unique_id=1756164096 instance=ExtResource("3_3mqfk")]
-position = Vector2(280, 432)
-
-[node name="Slime9" parent="Slimes" unique_id=2074644890 instance=ExtResource("3_3mqfk")]
-position = Vector2(344, 432)
-slime_colour = 1
-
-[node name="Slime10" parent="Slimes" unique_id=1160487204 instance=ExtResource("3_3mqfk")]
-position = Vector2(408, 432)
-slime_colour = 2
-
 [node name="Game Manager" parent="." unique_id=421157100 instance=ExtResource("4_iixi8")]
 position = Vector2(-8, 0)
+level_settings = ExtResource("4_cyadu")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=444327255]
+
+[node name="Time Left label" type="Label" parent="CanvasLayer" unique_id=601772472]
+offset_left = 160.0
+offset_top = 32.0
+offset_right = 414.0
+offset_bottom = 102.0
+theme_override_font_sizes/font_size = 50
+text = "TIME LEFT:"
+
+[node name="Time Left Value" type="Label" parent="CanvasLayer" unique_id=881087175]
+offset_left = 240.0
+offset_top = 120.0
+offset_right = 340.0
+offset_bottom = 190.0
+theme_override_font_sizes/font_size = 50
+horizontal_alignment = 1

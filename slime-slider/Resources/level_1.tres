@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="levels_resource" format=3 uid="uid://ddn5pc76ojmba"]
+
+[ext_resource type="Script" uid="uid://dw33cjmt772pb" path="res://Scripts/levels_resource.gd" id="1_ndbar"]
+
+[resource]
+script = ExtResource("1_ndbar")
+glow_time = 3.0
+metadata/_custom_type_script = "uid://dw33cjmt772pb"

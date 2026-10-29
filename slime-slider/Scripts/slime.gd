@@ -70,7 +70,6 @@ func move_animation(target_position: Vector2):
 	is_moving = false
 
 func on_slime_selected():
-	print("getting input")
 	set_physics_process(true)
 
 func unselect_slime():
