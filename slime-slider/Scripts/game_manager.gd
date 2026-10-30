@@ -2,11 +2,16 @@ extends Node2D
 
 @export var level_settings: levels_resource
 @onready var slimes_parent_node: Node = $"../Slimes"
-var slime = preload("res://Scenes/slime.tscn")
+var slime_prefab = preload("res://Scenes/slime.tscn")
 
 var slimes: Array
 var controlled_slime
 var general_matches_made
+
+var grid: Array = []
+@onready var cell_size = level_settings.tile_size
+@onready var start_spawn_x = level_settings.start_spawn_x
+@onready var start_spawn_y = level_settings.start_spawn_y
 
 func _ready() -> void:
 	$"../CanvasLayer/Time Left Value".text = str(level_settings.level_time)
@@ -29,12 +34,22 @@ func _process(delta: float) -> void:
 	win_or_lose()
 
 func spawn_slimes():
-	for x in range(160, 417, 64):
-		for y in range(368, 689, 64):
-			var spawned_slime = slime.instantiate()
-			spawned_slime.position = Vector2(x, y)
-			spawned_slime.slime_colour = randi_range(0, 2)
+	for column in range(level_settings.grid_columns):
+		#adds an empty array to the end of the grid
+		grid.append([])
+		for row in range(level_settings.grid_rows):
+			#get the instantiated slime before spawning at position
+			var spawned_slime = slime_prefab.instantiate()
+			spawned_slime.position = cell_positions(column, row) 
+			spawned_slime.slime_colour = randi_range(0, spawned_slime.slime_colours.size() - 1)
 			slimes_parent_node.add_child(spawned_slime)
+			#puts the spawned slime into the empty array from earlier
+			#goes through each available position in the row before going back to columns loop
+			grid[column].append(spawned_slime)
+
+func cell_positions(column: int, row: int) -> Vector2:
+	#e.g. first slime is 160 + 0 * 64, 368 + 0 *64 for (160, 368)
+	return Vector2(start_spawn_x + column * cell_size, start_spawn_y + row * cell_size)
 
 func on_slime_clicked():
 	var clicked_button = get_viewport().gui_get_focus_owner()

@@ -4,6 +4,13 @@
 
 [resource]
 script = ExtResource("1_ndbar")
-glow_time = 3.0
-level_time = 5.0
+slimes_count = 30
+glow_time = 2.0
+pick_glow_interval = 3.0
+level_time = 60.0
+general_matches = 10
+grid_columns = 5
+grid_rows = 6
+start_spawn_x = 160
+start_spawn_y = 368
 metadata/_custom_type_script = "uid://dw33cjmt772pb"

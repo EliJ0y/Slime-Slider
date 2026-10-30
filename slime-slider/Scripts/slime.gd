@@ -5,8 +5,10 @@ signal stopped_glowing(slime)
 var green_slime = preload("res://Assets/green-slime.png")
 var blue_slime = preload("res://Assets/blue-slime.png")
 var yellow_slime = preload("res://Assets/yellow-slime.png")
+var red_slime = preload("res://Assets/red-slime.png")
+var purple_slime = preload("res://Assets/purple-slime.png")
 
-var slime_colours: Array = [green_slime, blue_slime, yellow_slime]
+var slime_colours: Array = [green_slime, blue_slime, yellow_slime, red_slime, purple_slime]
 @export var slime_colour: int
 
 const tile_size = 64
