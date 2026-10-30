@@ -16,6 +16,8 @@ var grid: Array = []
 func _ready() -> void:
 	$"../CanvasLayer/Time Left Value".text = str(level_settings.level_time)
 	spawn_slimes()
+	find_matches()
+	
 	slimes = $"../Slimes".get_children()
 	for slime in slimes:
 		var slime_button = slime.get_node("Slime Button")
@@ -85,9 +87,28 @@ func on_slime_stopped_glowing(slime):
 		controlled_slime.unselect_slime()
 		controlled_slime = null
 
+func find_matches():
+	var matched_slimes: Array = []
+	var colours_adjacent: Array = []
+	for column in grid.size():
+		for slime in grid[column]:
+			if colours_adjacent.is_empty() or slime.slime_colour == colours_adjacent[0].slime_colour:
+				colours_adjacent.append(slime)
+			else:
+				if colours_adjacent.size() >= 3:
+					#adds a match of 3 or more same colour slimes to to array
+					matched_slimes.append(colours_adjacent)
+				#starts anew from the slime after the match
+				colours_adjacent = [slime]
+		#checks at the end so matches completing with last slime in the column still count
+		if colours_adjacent.size() >= 3:
+			matched_slimes.append(colours_adjacent)
+		colours_adjacent.clear()
+		print(matched_slimes.size())
+
 func win_or_lose():
 	if level_settings.level_time <= 0:
-		#if general_matches_made >= level_settings.general_matches:
+		if general_matches_made >= level_settings.general_matches:
 			$"../You Win Screen".visible = true
-		#else:
-			#$"../Game Over Screen".visible = true
+		else:
+			$"../Game Over Screen".visible = true
