@@ -1,7 +1,6 @@
 [gd_scene format=3 uid="uid://c0klpfbdji3fy"]
 
 [ext_resource type="Script" uid="uid://on5ntedt7hnc" path="res://Scripts/slime.gd" id="1_jokqx"]
-[ext_resource type="Texture2D" uid="uid://d4gj5l5rd82ye" path="res://Assets/blue-slime.png" id="2_aiwxb"]
 [ext_resource type="Texture2D" uid="uid://dwxlti4md1rt6" path="res://Assets/White border.png" id="3_paq7w"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_3mqfk"]
@@ -27,8 +26,6 @@ theme_override_styles/pressed = SubResource("StyleBoxEmpty_iixi8")
 theme_override_styles/hover = SubResource("StyleBoxEmpty_cyadu")
 
 [node name="Slime Sprite" type="Sprite2D" parent="." unique_id=711124920]
-scale = Vector2(0.107, 0.107)
-texture = ExtResource("2_aiwxb")
 
 [node name="White Border" type="Sprite2D" parent="." unique_id=434014056]
 scale = Vector2(0.58000004, 0.58000004)

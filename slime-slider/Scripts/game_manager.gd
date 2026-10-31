@@ -16,7 +16,10 @@ var grid: Array = []
 func _ready() -> void:
 	$"../CanvasLayer/Time Left Value".text = str(level_settings.level_time)
 	spawn_slimes()
-	find_matches()
+	var matched = find_matches()
+	print(matched.size())
+	for slime in matched:
+		slime.modulate = Color(0.5, 0.5, 0.5)
 	
 	slimes = $"../Slimes".get_children()
 	for slime in slimes:
@@ -34,6 +37,7 @@ func _process(delta: float) -> void:
 		level_settings.level_time -= delta
 		$"../CanvasLayer/Time Left Value".text = str(roundi(level_settings.level_time))
 	win_or_lose()
+
 
 func spawn_slimes():
 	for column in range(level_settings.grid_columns):
@@ -87,24 +91,44 @@ func on_slime_stopped_glowing(slime):
 		controlled_slime.unselect_slime()
 		controlled_slime = null
 
-func find_matches():
+
+func find_matches() -> Array:
 	var matched_slimes: Array = []
-	var colours_adjacent: Array = []
+	
+	#checks the slimes in every column
 	for column in grid.size():
-		for slime in grid[column]:
-			if colours_adjacent.is_empty() or slime.slime_colour == colours_adjacent[0].slime_colour:
-				colours_adjacent.append(slime)
-			else:
-				if colours_adjacent.size() >= 3:
-					#adds a match of 3 or more same colour slimes to to array
-					matched_slimes.append(colours_adjacent)
-				#starts anew from the slime after the match
-				colours_adjacent = [slime]
-		#checks at the end so matches completing with last slime in the column still count
-		if colours_adjacent.size() >= 3:
-			matched_slimes.append(colours_adjacent)
-		colours_adjacent.clear()
-		print(matched_slimes.size())
+		var colours_adjacent: Array = []
+		for row in grid[column].size():
+			#check each slime to see if they r viable to become a match
+			colours_adjacent = scan_slimes(grid[column][row], colours_adjacent, matched_slimes)
+		#calls the fucntion to check if any matches have been made
+		save_colours_adjacent(colours_adjacent, matched_slimes)
+	
+	#checks the slimes in every row
+	for row in grid[0].size():
+		var colours_adjacent: Array = []
+		for column in grid.size():
+			colours_adjacent = scan_slimes(grid[column][row], colours_adjacent, matched_slimes)
+		save_colours_adjacent(colours_adjacent, matched_slimes)
+	
+	return matched_slimes
+
+func scan_slimes(slime, colours_adjacent: Array, matched_slimes: Array) -> Array:
+	#checks if theres nothing or if the colours match
+	if colours_adjacent.is_empty() or slime.slime_colour == colours_adjacent[0].slime_colour:
+		colours_adjacent.append(slime)
+		return colours_adjacent
+	
+	#calls the fucntion to check if any matches have been made
+	save_colours_adjacent(colours_adjacent, matched_slimes)
+	#starts a new array with the current slime after colour changes
+	return [slime]
+
+func save_colours_adjacent(colours_adjacent: Array, matched_slimes: Array):
+	if colours_adjacent.size() >= 3:
+		for slime in colours_adjacent:
+			if not matched_slimes.has(slime):
+				matched_slimes.append(slime)
 
 func win_or_lose():
 	if level_settings.level_time <= 0:
