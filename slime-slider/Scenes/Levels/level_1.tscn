@@ -1236,6 +1236,14 @@ offset_bottom = 190.0
 theme_override_font_sizes/font_size = 50
 horizontal_alignment = 1
 
+[node name="Objective Label" type="Label" parent="CanvasLayer" unique_id=676534308]
+offset_left = 88.0
+offset_top = 864.0
+offset_right = 484.0
+offset_bottom = 933.0
+theme_override_font_sizes/font_size = 50
+horizontal_alignment = 1
+
 [node name="Game Over Screen" parent="." unique_id=1573366527 instance=ExtResource("4_xgxfi")]
 visible = false
 

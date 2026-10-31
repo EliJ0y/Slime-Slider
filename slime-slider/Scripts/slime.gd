@@ -1,5 +1,6 @@
 extends CharacterBody2D
 
+signal move_slime_finished
 signal stopped_glowing(slime)
 
 var green_slime = preload("res://Assets/green-slime.png")
@@ -52,17 +53,18 @@ func move_one_tile(direction: Vector2i):
 	#checks for collisions by taking object's position and how far it will move
 	if test_move(global_transform, offset, collision):
 		var collided_object = collision.get_collider()
-		print(collided_object)
 		if collided_object is CharacterBody2D:
 			#move other slime first so controlled slime's global position hasnt updated yet
 			collided_object.move_animation(global_position)
 			#then move the controlled slime like normal
-			move_animation(global_position + offset)
+			await move_animation(global_position + offset)
+			move_slime_finished.emit()
 			return
 		else:
 			return
 	#if no collision, move controlled slime like normal
-	move_animation(global_position + offset)
+	await move_animation(global_position + offset)
+	move_slime_finished.emit()
 
 func move_animation(target_position: Vector2):
 	is_moving = true
