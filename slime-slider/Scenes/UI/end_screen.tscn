@@ -1,7 +1,10 @@
 [gd_scene format=3 uid="uid://cl7jabvd81cfv"]
 
-[node name="You Win Screen" type="Node2D" unique_id=739753762]
+[ext_resource type="Script" uid="uid://bxe640hri3tt" path="res://Scripts/end_screen.gd" id="1_05q7c"]
+
+[node name="End Screen" type="Node2D" unique_id=739753762]
 z_index = 1
+script = ExtResource("1_05q7c")
 
 [node name="Panel" type="Panel" parent="." unique_id=428382223]
 anchors_preset = 15
@@ -12,13 +15,12 @@ offset_bottom = 1024.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Game Over Text" type="Label" parent="." unique_id=1715736344]
+[node name="Win_Lose Text" type="Label" parent="." unique_id=1715736344]
 offset_left = 48.0
 offset_top = 272.0
 offset_right = 528.0
 offset_bottom = 382.0
 theme_override_font_sizes/font_size = 80
-text = "YOU WIN!"
 horizontal_alignment = 1
 
 [node name="Retry Button" type="Button" parent="." unique_id=2029904634]
@@ -30,6 +32,7 @@ theme_override_font_sizes/font_size = 60
 text = "Retry"
 
 [node name="Next Level Button" type="Button" parent="." unique_id=1516081990]
+visible = false
 offset_left = 105.0
 offset_top = 574.0
 offset_right = 465.0
@@ -38,3 +41,4 @@ theme_override_font_sizes/font_size = 60
 text = "Next Level"
 
 [connection signal="pressed" from="Retry Button" to="." method="_on_retry_button_pressed"]
+[connection signal="pressed" from="Next Level Button" to="." method="_on_next_level_button_pressed"]

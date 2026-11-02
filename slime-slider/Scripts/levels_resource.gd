@@ -2,6 +2,7 @@ extends Resource
 
 class_name levels_resource
 
+@export_file(".tscn") var next_level_path: String
 @export var slimes_count: int
 @export var glow_time: float
 @export var pick_glow_interval: float

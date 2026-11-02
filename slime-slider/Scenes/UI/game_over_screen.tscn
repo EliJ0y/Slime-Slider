@@ -1,7 +1,10 @@
 [gd_scene format=3 uid="uid://duy1e72p13lx4"]
 
+[ext_resource type="Script" uid="uid://dlrlof8vog7ox" path="res://Scripts/game_over_screen.gd" id="1_ptf6f"]
+
 [node name="Game Over Screen" type="Node2D" unique_id=1573366527]
 z_index = 1
+script = ExtResource("1_ptf6f")
 
 [node name="Panel" type="Panel" parent="." unique_id=1337645044]
 anchors_preset = 15

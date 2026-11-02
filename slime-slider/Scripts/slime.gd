@@ -30,16 +30,12 @@ func get_input():
 	var direction = Vector2i.ZERO
 	
 	if Input.is_action_pressed("up"):
-		print(is_moving)
 		direction = Vector2i.UP
 	elif Input.is_action_pressed("down"):
-		print(is_moving)
 		direction = Vector2i.DOWN
 	elif Input.is_action_pressed("left"):
-		print(is_moving)
 		direction = Vector2i.LEFT
 	elif Input.is_action_pressed("right"):
-		print(is_moving)
 		direction = Vector2i.RIGHT
 	
 	if direction != Vector2i.ZERO:

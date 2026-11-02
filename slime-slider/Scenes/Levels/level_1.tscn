@@ -3,8 +3,7 @@
 [ext_resource type="Texture2D" uid="uid://50iagn18g2o4" path="res://Assets/BaseSet.png" id="2_4dpyx"]
 [ext_resource type="Resource" uid="uid://ddn5pc76ojmba" path="res://Resources/level_1.tres" id="4_cyadu"]
 [ext_resource type="PackedScene" uid="uid://dwabxrcbtrokp" path="res://Scenes/game_manager.tscn" id="4_iixi8"]
-[ext_resource type="PackedScene" uid="uid://duy1e72p13lx4" path="res://Scenes/UI/game_over_screen.tscn" id="4_xgxfi"]
-[ext_resource type="PackedScene" uid="uid://cl7jabvd81cfv" path="res://Scenes/UI/you_win_screen.tscn" id="5_5f3p6"]
+[ext_resource type="PackedScene" uid="uid://cl7jabvd81cfv" path="res://Scenes/UI/end_screen.tscn" id="5_5f3p6"]
 
 [sub_resource type="GDScript" id="GDScript_3mqfk"]
 script/source = "extends Node2D
@@ -1244,8 +1243,4 @@ offset_bottom = 933.0
 theme_override_font_sizes/font_size = 50
 horizontal_alignment = 1
 
-[node name="Game Over Screen" parent="." unique_id=1573366527 instance=ExtResource("4_xgxfi")]
-visible = false
-
 [node name="You Win Screen" parent="." unique_id=739753762 instance=ExtResource("5_5f3p6")]
-visible = false

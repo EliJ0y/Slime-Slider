@@ -1,24 +1,33 @@
 extends Node2D
 
+signal level_won(next_level_path)
+signal level_lost()
+
 @export var level_settings: levels_resource
 @onready var slimes_parent_node: Node = $"../Slimes"
 var slime_prefab = preload("res://Scenes/slime.tscn")
-
-var slimes: Array
-var controlled_slime
-var general_matches_made: int
-
-var fade_time = 1.0
-var drop_time = 0.5
-var resolving_slimes = false
 
 var grid: Array = []
 @onready var tile_size = level_settings.tile_size
 @onready var start_spawn_x = level_settings.start_spawn_x
 @onready var start_spawn_y = level_settings.start_spawn_y
 
+var slimes: Array
+var controlled_slime
+var general_matches_made: int
+
+#need to make a var instead of using level_settings.level_time so that the time can reset properly when you retry
+var time_left: float
+var level_ended = false
+
+var fade_time = 1.0
+var drop_time = 0.5
+var resolving_slimes = false
+
+
 func _ready() -> void:
-	$"../CanvasLayer/Time Left Value".text = str(level_settings.level_time)
+	time_left = level_settings.level_time
+	$"../CanvasLayer/Time Left Value".text = str(time_left)
 	$"../CanvasLayer/Objective Label".text = str(level_settings.general_matches) + " Matches Left!"
 	spawn_slimes()
 	await resolve_matches()
@@ -28,9 +37,11 @@ func _ready() -> void:
 	glowing_slime_cycle()
 
 func _process(delta: float) -> void:
-	if level_settings.level_time > 0:
-		level_settings.level_time -= delta
-		$"../CanvasLayer/Time Left Value".text = str(roundi(level_settings.level_time))
+	if level_ended: 
+		return
+	if time_left > 0:
+		time_left -= delta
+		$"../CanvasLayer/Time Left Value".text = str(roundi(time_left))
 		$"../CanvasLayer/Objective Label".text = str(level_settings.general_matches - general_matches_made) + " Matches Left!"
 	win_or_lose()
 
@@ -77,7 +88,7 @@ func rebuild_grid():
 
 
 func on_slime_clicked():
-	if resolving_slimes:
+	if resolving_slimes or level_ended:
 		return
 	
 	var clicked_button = get_viewport().gui_get_focus_owner()
@@ -95,6 +106,8 @@ func on_slime_clicked():
 		controlled_slime.on_slime_selected()
 
 func pick_glowing_slimes():
+	if resolving_slimes:
+		return
 	#filters out the already glowing slimes
 	var not_glowing_slimes = slimes.filter(func(slime): return not slime.is_glowing)
 	#will only pick slimes that arent already glowing
@@ -104,7 +117,7 @@ func pick_glowing_slimes():
 
 func glowing_slime_cycle():
 	#gets called in ready and runs during the level to continually pick new glowing slimes
-	while level_settings.level_time > 4:
+	while time_left> 4:
 		await get_tree().create_timer(level_settings.pick_glow_interval).timeout
 		pick_glowing_slimes()
 
@@ -259,8 +272,9 @@ func respawn_slimes():
 
 
 func win_or_lose():
-	if level_settings.level_time <= 0:
+	if time_left <= 0:
+		level_ended = true
 		if general_matches_made >= level_settings.general_matches:
-			$"../You Win Screen".visible = true
+			level_won.emit(level_settings.next_level_path)
 		else:
-			$"../Game Over Screen".visible = true
+			level_lost.emit()

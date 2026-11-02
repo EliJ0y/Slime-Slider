@@ -4,6 +4,7 @@
 
 [resource]
 script = ExtResource("1_ndbar")
+next_level_path = "uid://qslgrr8fm3ll"
 slimes_count = 30
 glow_time = 2.0
 pick_glow_interval = 3.0
