@@ -32,7 +32,6 @@ theme_override_font_sizes/font_size = 60
 text = "Retry"
 
 [node name="Next Level Button" type="Button" parent="." unique_id=1516081990]
-visible = false
 offset_left = 105.0
 offset_top = 574.0
 offset_right = 465.0

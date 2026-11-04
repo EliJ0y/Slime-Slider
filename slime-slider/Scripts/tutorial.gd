@@ -33,7 +33,7 @@ func _ready() -> void:
 		register_slime(slime)
 	rebuild_grid()
 	
-	await get_tree().create_timer(1.5).timeout
+	await get_tree().create_timer(1.0).timeout
 	slime_5.glow_time = 9999
 	slime_5.slime_glowing()
 	

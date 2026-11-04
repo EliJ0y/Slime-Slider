@@ -41,8 +41,12 @@ func _process(delta: float) -> void:
 		return
 	if time_left > 0:
 		time_left -= delta
-		$"../CanvasLayer/Time Left Value".text = str(roundi(time_left))
-		$"../CanvasLayer/Objective Label".text = str(level_settings.general_matches - general_matches_made) + " Matches Left!"
+		if not general_matches_made >= level_settings.general_matches:
+			$"../CanvasLayer/Time Left Value".text = str(roundi(time_left))
+			$"../CanvasLayer/Objective Label".text = str(level_settings.general_matches - general_matches_made) + " Matches Left!"
+		else:
+			$"../CanvasLayer/Time Left Value".text = str(roundi(time_left))
+			$"../CanvasLayer/Objective Label".text = str(general_matches_made - level_settings.general_matches) + " Extra Matches\nWell done!"
 	win_or_lose()
 
 
@@ -273,6 +277,9 @@ func respawn_slimes():
 
 func win_or_lose():
 	if time_left <= 0:
+		$"../CanvasLayer/Time Left label".visible = false
+		$"../CanvasLayer/Time Left Value".visible = false
+		$"../CanvasLayer/Objective Label".visible = false
 		level_ended = true
 		if general_matches_made >= level_settings.general_matches:
 			level_won.emit(level_settings.next_level_path)
