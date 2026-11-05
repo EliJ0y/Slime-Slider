@@ -4,9 +4,10 @@
 
 [resource]
 script = ExtResource("1_kfpiv")
+next_level_path = "uid://di4mai5ogji71"
 slimes_count = 16
 glow_time = 2.0
-pick_glow_interval = 2.5
+pick_glow_interval = 2.25
 level_time = 30.0
 general_matches = 5
 grid_columns = 4
