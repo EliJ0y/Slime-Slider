@@ -15,6 +15,7 @@ var slime_colours: Array = [green_slime, blue_slime, yellow_slime, red_slime, pu
 const tile_size = 64
 const move_time = 0.2
 
+var slime_selected = false
 var is_moving = false
 var is_glowing = false
 var glow_time = 2.0
@@ -36,6 +37,23 @@ func get_input():
 	elif Input.is_action_pressed("left"):
 		direction = Vector2i.LEFT
 	elif Input.is_action_pressed("right"):
+		direction = Vector2i.RIGHT
+	
+	if direction != Vector2i.ZERO:
+		move_one_tile(direction)
+
+func _input(event) -> void:
+	if is_moving or !slime_selected:
+		return
+	var direction = Vector2i.ZERO
+	
+	if event is InputEventScreenDrag and event.relative.y < 0:
+		direction = Vector2i.UP
+	elif event is InputEventScreenDrag and event.relative.y > 0:
+		direction = Vector2i.DOWN
+	elif event is InputEventScreenDrag and event.relative.x < 0:
+		direction = Vector2i.LEFT
+	elif event is InputEventScreenDrag and event.relative.x > 0:
 		direction = Vector2i.RIGHT
 	
 	if direction != Vector2i.ZERO:
@@ -70,9 +88,11 @@ func move_animation(target_position: Vector2):
 	is_moving = false
 
 func on_slime_selected():
+	slime_selected = true
 	set_physics_process(true)
 
 func unselect_slime():
+	slime_selected = false
 	set_physics_process(false)
 
 func _physics_process(delta: float) -> void:
