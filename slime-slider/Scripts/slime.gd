@@ -15,10 +15,14 @@ var slime_colours: Array = [green_slime, blue_slime, yellow_slime, red_slime, pu
 const tile_size = 64
 const move_time = 0.2
 
-var slime_selected = false
 var is_moving = false
 var is_glowing = false
 var glow_time = 2.0
+
+var slime_selected = false
+var swipe_total_distance := Vector2.ZERO
+var swipe_min_distance = 30.0
+var finished_swiping = false
 
 func _ready() -> void:
 	$"Slime Sprite".texture = slime_colours[slime_colour]
@@ -42,22 +46,37 @@ func get_input():
 	if direction != Vector2i.ZERO:
 		move_one_tile(direction)
 
+#checks for the direction across the whole swipe to reduce wrong movement
 func _input(event) -> void:
 	if is_moving or !slime_selected:
 		return
-	var direction = Vector2i.ZERO
 	
-	if event is InputEventScreenDrag and event.relative.y < 0:
-		direction = Vector2i.UP
-	elif event is InputEventScreenDrag and event.relative.y > 0:
-		direction = Vector2i.DOWN
-	elif event is InputEventScreenDrag and event.relative.x < 0:
-		direction = Vector2i.LEFT
-	elif event is InputEventScreenDrag and event.relative.x > 0:
-		direction = Vector2i.RIGHT
+	#checks for a new screen touch
+	if event is InputEventScreenTouch and event.pressed:
+		swipe_total_distance = Vector2.ZERO
+		finished_swiping = false
 	
-	if direction != Vector2i.ZERO:
-		move_one_tile(direction)
+	elif event is InputEventScreenDrag and !finished_swiping:
+		#adds movement since the last swipe
+		swipe_total_distance += event.relative
+		if swipe_total_distance.length() >= swipe_min_distance:
+			finished_swiping = true
+			var direction = Vector2i.ZERO
+			#checks if the absolute horizontal movement was more than absolute vertical movement
+			if abs(swipe_total_distance.x) > abs(swipe_total_distance.y):
+				if swipe_total_distance.x < 0:
+					direction = Vector2i.LEFT
+				else:
+					direction = Vector2i.RIGHT
+			else:
+				if swipe_total_distance.y < 0:
+					direction = Vector2i.UP
+				else:
+					direction = Vector2i.DOWN
+			
+			if !is_moving:
+				finished_swiping = true
+				move_one_tile(direction)
 
 func move_one_tile(direction: Vector2i):
 	#e.g. Vector2i.UP is (0, -1) so this will be (0, -64) and only moves in the one direction i want
