@@ -9,7 +9,7 @@ var slime_prefab = preload("res://Scenes/slime.tscn")
 @onready var slime_5: CharacterBody2D = $Slimes/Slime5
 
 var grid: Array = []
-@onready var tile_size = level_settings.tile_size
+@onready var cell_size = level_settings.cell_size
 @onready var start_spawn_x = level_settings.start_spawn_x
 @onready var start_spawn_y = level_settings.start_spawn_y
 
@@ -58,7 +58,7 @@ func setup_grid():
 			grid[column].append(null)
 
 func cell_positions(column: int, row: int) -> Vector2:
-	return Vector2(start_spawn_x + column * tile_size, start_spawn_y + row * tile_size)
+	return Vector2(start_spawn_x + column * cell_size, start_spawn_y + row * cell_size)
 
 func register_slime(slime):
 	slime.get_node("Slime Button").pressed.connect(on_slime_clicked)
@@ -93,8 +93,8 @@ func rebuild_grid():
 		for row in grid[column].size():
 			grid[column][row] = null
 	for slime in slimes:
-		var column = roundi((slime.position.x - level_settings.start_spawn_x) / level_settings.tile_size)
-		var row = roundi((slime.position.y - level_settings.start_spawn_y) / level_settings.tile_size)
+		var column = roundi((slime.position.x - level_settings.start_spawn_x) / level_settings.cell_size)
+		var row = roundi((slime.position.y - level_settings.start_spawn_y) / level_settings.cell_size)
 		if column >= 0 and column < grid.size() and row >= 0 and row < grid[column].size():
 			grid[column][row] = slime
 

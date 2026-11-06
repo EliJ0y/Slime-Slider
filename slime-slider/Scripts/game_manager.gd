@@ -8,9 +8,16 @@ signal level_lost()
 var slime_prefab = preload("res://Scenes/slime.tscn")
 
 var grid: Array = []
-@onready var tile_size = level_settings.tile_size
+@onready var cell_size = level_settings.cell_size
 @onready var start_spawn_x = level_settings.start_spawn_x
 @onready var start_spawn_y = level_settings.start_spawn_y
+
+@onready var tile_map_layer: TileMapLayer = $"../TileMapLayer"
+var tiles_data: Dictionary = {
+	"rock" = Vector2i(19, 23),
+	"water" = Vector2i(22,  7)
+}
+var grid_gaps: Dictionary
 
 var slimes: Array
 var controlled_slime
@@ -29,6 +36,8 @@ func _ready() -> void:
 	time_left = level_settings.level_time
 	$"../CanvasLayer/Time Left Value".text = str(time_left)
 	$"../CanvasLayer/Objective Label".text = str(level_settings.general_matches) + " Matches Left!"
+	
+	find_grid_gaps()
 	spawn_slimes()
 	await resolve_matches()
 	
@@ -67,11 +76,14 @@ func spawn_slimes():
 		#adds an empty array to the end of the grid
 		grid.append([])
 		for row in range(level_settings.grid_rows):
-			grid[column].append(create_slime(column, row))
+			if is_cell_gap(column, row):
+				grid[column].append(null)
+			else:
+				grid[column].append(create_slime(column, row))
 
 func cell_positions(column: int, row: int) -> Vector2:
 	#e.g. first slime is 160 + 0 * 64, 368 + 0 *64 for (160, 368)
-	return Vector2(start_spawn_x + column * tile_size, start_spawn_y + row * tile_size)
+	return Vector2(start_spawn_x + column * cell_size, start_spawn_y + row * cell_size)
 
 func on_slime_moved():
 	rebuild_grid()
@@ -84,11 +96,37 @@ func rebuild_grid():
 			grid[column][row] = null
 	for slime in slimes:
 		#e.g. (224 - 160) / 64 = 1. so slime is in the column of index 1
-		var column = roundi((slime.position.x - start_spawn_x) / tile_size)
-		var row = roundi((slime.position.y - start_spawn_y) / tile_size)
+		var column = roundi((slime.position.x - start_spawn_x) / cell_size)
+		var row = roundi((slime.position.y - start_spawn_y) / cell_size)
 		#ensures its within the bounds of the grid
 		if (column >= 0 and column < grid.size()) and (row >= 0 and row < grid[column].size()):
 			grid[column][row] = slime
+
+
+func is_cell_gap(column: int, row: int) -> bool:
+	return grid_gaps.has(Vector2i(column, row))
+
+func find_grid_gaps():
+	grid_gaps.clear()
+	#one 64px cell has 16 tiles, 4 per line
+	var tiles_per_line = roundi(cell_size / tile_map_layer.tile_set.tile_size.x)
+	
+	for column in range(level_settings.grid_columns):
+		for row in range(level_settings.grid_rows):
+			#go to the corner of the 64px cell instead of the centre
+			var corner = cell_positions(column, row) - (Vector2(cell_size, cell_size) / 2)
+			
+			#ensure its inside the tile and not on the edge
+			#converts the world coords into coords local to the tile map
+			#converts the local coords into tile coords like (1, 10 
+			var first_tile = tile_map_layer.local_to_map(tile_map_layer.to_local(corner + Vector2(1, 1)))
+			
+			for x in tiles_per_line:
+				for y in tiles_per_line:
+					#gets coords from tileset for each tile in the line by increasing by Vector2i(x, y)
+					var atlas_coords  = tile_map_layer.get_cell_atlas_coords(first_tile + Vector2i(x, y))
+					if atlas_coords in tiles_data.values():
+						grid_gaps[Vector2i(column, row)] = true
 
 
 func on_slime_clicked():
@@ -155,6 +193,10 @@ func find_matches() -> Array:
 	return matched_slimes_groups
 
 func scan_slimes(slime, colours_adjacent: Array, matched_slimes_groups: Array) -> Array:
+	if slime == null:
+		save_colours_adjacent(colours_adjacent, matched_slimes_groups)
+		return []
+	
 	#checks if theres nothing or if the colours match
 	if colours_adjacent.is_empty() or slime.slime_colour == colours_adjacent[0].slime_colour:
 		colours_adjacent.append(slime)
@@ -252,6 +294,9 @@ func drop_slimes():
 		#from bottom-most row, goes up a row each time, stops before index -1 which doesnt exist
 		for row in range((grid[column].size() - 1), -1, -1):
 			var slime = grid[column][row]
+			if is_cell_gap(column, row):
+				lowest_row = row - 1
+				continue
 			if slime == null:
 				continue
 			if row != lowest_row:
@@ -266,8 +311,8 @@ func drop_slimes():
 func respawn_slimes():
 	for column in grid.size():
 		for row in grid[column].size():
-			#checks if the position is empty
-			if grid[column][row] == null:
+			#checks if the position is empty and not a gap
+			if grid[column][row] == null and !is_cell_gap(column, row):
 				#then creates a new slime for that position
 				var new_slime = create_slime(column, row)
 				grid[column][row] = new_slime

@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="levels_resource" format=3 uid="uid://bm8jvqtl7ivna"]
+
+[ext_resource type="Script" uid="uid://dw33cjmt772pb" path="res://Scripts/levels_resource.gd" id="1_6nw5b"]
+
+[resource]
+script = ExtResource("1_6nw5b")
+next_level_path = "uid://tb6mb5dkmoy0"
+slimes_count = 16
+glow_time = 2.0
+pick_glow_interval = 2.25
+level_time = 60.0
+general_matches = 10
+grid_columns = 5
+grid_rows = 5
+start_spawn_x = 160
+start_spawn_y = 384
+metadata/_custom_type_script = "uid://dw33cjmt772pb"

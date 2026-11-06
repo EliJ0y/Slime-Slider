@@ -12,7 +12,7 @@ var purple_slime = preload("res://Assets/purple-slime.png")
 var slime_colours: Array = [green_slime, blue_slime, yellow_slime, red_slime, purple_slime]
 @export var slime_colour: int
 
-const tile_size = 64
+const cell_size = 64
 const move_time = 0.2
 
 var is_moving = false
@@ -80,7 +80,7 @@ func _input(event) -> void:
 
 func move_one_tile(direction: Vector2i):
 	#e.g. Vector2i.UP is (0, -1) so this will be (0, -64) and only moves in the one direction i want
-	var offset = Vector2(direction * tile_size)
+	var offset = Vector2(direction * cell_size)
 	var collision = KinematicCollision2D.new()
 	
 	#checks for collisions by taking object's position and how far it will move

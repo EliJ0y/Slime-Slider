@@ -4,6 +4,7 @@
 
 [resource]
 script = ExtResource("1_nduho")
+next_level_path = "uid://tb6mb5dkmoy0"
 slimes_count = 16
 glow_time = 2.0
 pick_glow_interval = 2.25
