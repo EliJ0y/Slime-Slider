@@ -1,6 +1,6 @@
 extends Node2D
 
-signal level_won(next_level_path)
+signal level_won(next_level_path, extra_matches, highscore, new_highscore)
 signal level_lost()
 
 @export var level_settings: levels_resource
@@ -31,11 +31,15 @@ var fade_time = 1.0
 var drop_time = 0.5
 var resolving_slimes = false
 
+var level: String
+
 
 func _ready() -> void:
+	level = get_tree().current_scene.scene_file_path.get_file().get_basename()
 	time_left = level_settings.level_time
 	$"../CanvasLayer/Time Left Value".text = str(time_left)
 	$"../CanvasLayer/Objective Label".text = str(level_settings.general_matches) + " Matches Left!"
+	$"../CanvasLayer/Highscore".text = "Extra Matches Highscore: " + str(LevelHighscores.get_highscores(level))
 	
 	find_grid_gaps()
 	spawn_slimes()
@@ -245,6 +249,7 @@ func resolve_matches():
 	while not matched_slimes_groups.is_empty():
 		#adds a point for each unique match
 		general_matches_made += matched_slimes_groups.size()
+		update_highscore_label()
 		
 		var matched_slimes: Array = []
 		for group in matched_slimes_groups:
@@ -262,6 +267,12 @@ func resolve_matches():
 	if controlled_slime != null:
 		controlled_slime.on_slime_selected()
 	resolving_slimes = false
+
+func update_highscore_label():
+	var extra_matches = general_matches_made - level_settings.general_matches
+	#comapre whether old highscore or current extra matches is higher
+	var highscore = maxi(LevelHighscores.get_highscores(level), extra_matches)
+	$"../CanvasLayer/Highscore".text = "Extra Matches Highscore: " + str(highscore)
 
 func fade_out_slimes(matched_slimes: Array):
 	for slime in matched_slimes:
@@ -325,8 +336,11 @@ func win_or_lose():
 		$"../CanvasLayer/Time Left label".visible = false
 		$"../CanvasLayer/Time Left Value".visible = false
 		$"../CanvasLayer/Objective Label".visible = false
+		$"../CanvasLayer/Highscore". visible = false
 		level_ended = true
 		if general_matches_made >= level_settings.general_matches:
-			level_won.emit(level_settings.next_level_path)
+			var extra_matches = general_matches_made - level_settings.general_matches
+			var new_highscore = LevelHighscores.increase_highscore(level, extra_matches)
+			level_won.emit(level_settings.next_level_path, extra_matches, LevelHighscores.get_highscores(level), new_highscore)
 		else:
 			level_lost.emit()

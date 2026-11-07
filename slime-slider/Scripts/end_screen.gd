@@ -3,6 +3,8 @@ extends Node2D
 @onready var win_lose_text: Label = $"Win_Lose Text"
 @onready var retry_button: Button = $"Retry Button"
 @onready var next_level_button: Button = $"Next Level Button"
+@onready var highscore_text: Label = $Highscore
+
 
 var next_level_path: String
 
@@ -12,9 +14,16 @@ func _ready() -> void:
 	game_manager.connect("level_won", level_won)
 	game_manager.connect("level_lost", level_lost)
 
-func level_won(path: String):
+func level_won(path: String, extra_matches: int, highscore: int, new_highscore: bool):
 	visible = true
 	win_lose_text.text = "YOU WIN!"
+	var level = get_tree().current_scene.scene_file_path.get_file().get_basename()
+	
+	if new_highscore:
+		highscore_text.text = "NEW HIGHSCORE!\nEMH: " + str(LevelHighscores.get_highscores(level))
+	else:
+		highscore_text.text = "EMH: " + str(LevelHighscores.get_highscores(level))
+		
 	next_level_path = path
 	if not path.is_empty():
 		next_level_button.visible = true
