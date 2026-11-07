@@ -3605,13 +3605,13 @@ grow_horizontal = 2
 theme_override_font_sizes/font_size = 50
 horizontal_alignment = 1
 
-[node name="Objective Label" type="Label" parent="CanvasLayer" unique_id=478617796]
+[node name="Objective Label" type="Label" parent="CanvasLayer" unique_id=1233302337]
 anchors_preset = 10
 anchor_right = 1.0
 offset_left = 88.0
-offset_top = 800.0
-offset_right = -92.0
-offset_bottom = 933.0
+offset_top = 744.0
+offset_right = -88.0
+offset_bottom = 885.0
 grow_horizontal = 2
 theme_override_font_sizes/font_size = 50
 horizontal_alignment = 1
