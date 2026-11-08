@@ -27,7 +27,7 @@ var general_matches_made: int
 var time_left: float
 var level_ended = false
 
-var fade_time = 1.0
+var fade_time = 0.75
 var drop_time = 0.5
 var resolving_slimes = false
 

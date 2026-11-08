@@ -119,7 +119,7 @@ func on_slime_clicked():
 		
 		if !slime_selected:
 			slime_selected = true
-			tutorial_text.text = "Use WASD or arrow \n keys to move it"
+			tutorial_text.text = "Swipe, use WASD, or \n arrow keys to move it"
 		await get_tree().create_timer(2.0).timeout
 		if matches_made == 0:
 			tutorial_text.text = "Make a match!"
