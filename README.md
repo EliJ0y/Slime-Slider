@@ -13,9 +13,10 @@ How to play:
 There are 10 levels in the game currently. The difficulty increases as you progress. Mobile functionality is there but will most likely be slower than using a keyboard.
 
 
-<img width="499" height="868" alt="Screenshot 2026-11-08 at 2 34 24 AM" src="https://github.com/user-attachments/assets/9f12bcc2-5a51-444f-8d26-85eb1edd0033" />
-<img width="495" height="865" alt="Screenshot 2026-11-07 at 6 26 32 PM" src="https://github.com/user-attachments/assets/d82cd29a-88c3-46c0-a8cb-c5b0bf3954be" />
-<img width="494" height="867" alt="Screenshot 2026-11-07 at 6 26 22 PM" src="https://github.com/user-attachments/assets/5a6826bf-3a0f-48d1-8bec-356029de0587" />
+<img width="573" height="986" alt="Screenshot 2026-11-08 130440" src="https://github.com/user-attachments/assets/bcb08bf9-0d21-4378-8e9f-f5ea0a6f99e1" />
+<img width="573" height="988" alt="Screenshot 2026-11-08 130227" src="https://github.com/user-attachments/assets/d58d980f-bc7a-44b2-9237-4327bf78e86a" />
+<img width="570" height="985" alt="Screenshot 2026-11-08 130413" src="https://github.com/user-attachments/assets/cfbcb447-f4ca-48a9-b08a-63d99e7e20e3" />
+<img width="572" height="986" alt="Screenshot 2026-11-08 130426" src="https://github.com/user-attachments/assets/d20f9635-8a5f-4630-b3ab-4da26e98c973" />
 
 
 The tilemap I used is free and made by fliegevogel on itch.io at https://fliegevogel.itch.io/tinyworld. 
