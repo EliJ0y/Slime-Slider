@@ -16,7 +16,7 @@ There are 10 levels in the game currently. The difficulty increases as you progr
 <img width="573" height="986" alt="Screenshot 2026-11-08 130440" src="https://github.com/user-attachments/assets/bcb08bf9-0d21-4378-8e9f-f5ea0a6f99e1" />
 <img width="573" height="988" alt="Screenshot 2026-11-08 130227" src="https://github.com/user-attachments/assets/d58d980f-bc7a-44b2-9237-4327bf78e86a" />
 <img width="570" height="985" alt="Screenshot 2026-11-08 130413" src="https://github.com/user-attachments/assets/cfbcb447-f4ca-48a9-b08a-63d99e7e20e3" />
-<img width="572" height="986" alt="Screenshot 2026-11-08 130426" src="https://github.com/user-attachments/assets/d20f9635-8a5f-4630-b3ab-4da26e98c973" />
+<img width="574" height="987" alt="Screenshot 2026-11-08 135742" src="https://github.com/user-attachments/assets/9ded6ba7-d614-4c40-8328-37b10be29a79" />
 
 
 The tilemap I used is free and made by fliegevogel on itch.io at https://fliegevogel.itch.io/tinyworld. 
