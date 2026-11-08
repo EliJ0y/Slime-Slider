@@ -20,9 +20,9 @@ func level_won(path: String, extra_matches: int, highscore: int, new_highscore: 
 	var level = get_tree().current_scene.scene_file_path.get_file().get_basename()
 	
 	if new_highscore:
-		highscore_text.text = "NEW HIGHSCORE!\nEMH: " + str(LevelHighscores.get_highscores(level))
+		highscore_text.text = "NEW HIGHSCORE!\nHighscore: " + str(LevelHighscores.get_highscores(level))
 	else:
-		highscore_text.text = "EMH: " + str(LevelHighscores.get_highscores(level))
+		highscore_text.text = "Highscore: " + str(LevelHighscores.get_highscores(level))
 		
 	next_level_path = path
 	if not path.is_empty():

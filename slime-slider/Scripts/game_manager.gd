@@ -152,7 +152,10 @@ func on_slime_clicked():
 		controlled_slime.on_slime_selected()
 
 func pick_glowing_slimes():
-	if resolving_slimes:
+	#wait for the board to go back to normal then glow to reduce waiting time
+	while resolving_slimes:
+		await get_tree().process_frame
+	if level_ended:
 		return
 	#filters out the already glowing slimes
 	var not_glowing_slimes = slimes.filter(func(slime): return not slime.is_glowing)
@@ -163,9 +166,9 @@ func pick_glowing_slimes():
 
 func glowing_slime_cycle():
 	#gets called in ready and runs during the level to continually pick new glowing slimes
-	while time_left> 4:
+	while time_left > 2.5:
 		await get_tree().create_timer(level_settings.pick_glow_interval).timeout
-		pick_glowing_slimes()
+		await pick_glowing_slimes()
 
 func on_slime_stopped_glowing(slime):
 	#takes control away from the glowing slime if it was being controlled
