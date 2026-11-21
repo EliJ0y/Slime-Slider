@@ -4,11 +4,12 @@
 
 [resource]
 script = ExtResource("1_5n85n")
+next_level_path = "uid://s4pk3roa4pxy"
 slimes_count = 16
 glow_time = 2.0
 pick_glow_interval = 2.25
-level_time = 40.0
-general_matches = 7
+level_time = 30.0
+general_matches = 5
 grid_columns = 5
 grid_rows = 5
 start_spawn_x = 160
