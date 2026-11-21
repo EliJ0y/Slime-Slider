@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dwxlti4md1rt6"
-path="res://.godot/imported/White border.png-01d67724e59953f869b433f9381e9afd.ctex"
+uid="uid://bs3eyn4sgri0"
+path="res://.godot/imported/index.png-c56ecdd82aaf78caa928ca33e9cd422b.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/White border.png"
-dest_files=["res://.godot/imported/White border.png-01d67724e59953f869b433f9381e9afd.ctex"]
+source_file="res://Exported game UPDATED/index.png"
+dest_files=["res://.godot/imported/index.png-c56ecdd82aaf78caa928ca33e9cd422b.ctex"]
 
 [params]
 

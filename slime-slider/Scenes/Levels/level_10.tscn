@@ -3557,7 +3557,7 @@ texture = ExtResource("1_icg2m")
 physics_layer_0/collision_layer = 1
 sources/0 = SubResource("TileSetAtlasSource_4c8hl")
 
-[node name="level_10" type="Node2D" unique_id=1685067880]
+[node name="Level 10" type="Node2D" unique_id=1685067880]
 
 [node name="TileMapLayer" type="TileMapLayer" parent="." unique_id=1178546104]
 position = Vector2(-320, 144)

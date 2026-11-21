@@ -34,10 +34,10 @@ func level_lost():
 	next_level_button.visible = false
 
 func _on_retry_button_pressed() -> void:
-	get_tree().reload_current_scene()
+	get_tree().reload_current_scene() 
 
 func _on_next_level_button_pressed() -> void:
-	if next_level_path.is_empty():
+	if next_level_path.is_empty(): 
 		return
 	else: 
 		get_tree().change_scene_to_file(next_level_path) 
