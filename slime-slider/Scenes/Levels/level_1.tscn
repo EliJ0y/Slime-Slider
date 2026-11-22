@@ -1265,19 +1265,21 @@ theme_override_font_sizes/font_size = 25
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Sameification" type="TextureButton" parent="CanvasLayer" unique_id=185747962]
+[node name="Power-ups" type="Node2D" parent="CanvasLayer" unique_id=771897792]
+
+[node name="Sameification" type="TextureButton" parent="CanvasLayer/Power-ups" unique_id=185747962]
 offset_left = 528.0
 offset_top = 392.0
-offset_right = 592.0
-offset_bottom = 456.0
+offset_right = 720.0
+offset_bottom = 584.0
 scale = Vector2(0.25, 0.25)
 texture_normal = ExtResource("4_jv26f")
 
-[node name="Sameification Uses" type="Sprite2D" parent="CanvasLayer/Sameification" unique_id=62349408]
+[node name="Sameification Uses" type="Sprite2D" parent="CanvasLayer/Power-ups/Sameification" unique_id=62349408]
 scale = Vector2(0.75, 0.75)
 texture = ExtResource("5_rb0md")
 
-[node name="Number of Uses" type="Label" parent="CanvasLayer/Sameification/Sameification Uses" unique_id=2010354398]
+[node name="Number of Uses" type="Label" parent="CanvasLayer/Power-ups/Sameification/Sameification Uses" unique_id=2010354398]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -1293,19 +1295,19 @@ theme_override_font_sizes/font_size = 80
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Time Stop" type="TextureButton" parent="CanvasLayer" unique_id=1570407764]
+[node name="Time Stop" type="TextureButton" parent="CanvasLayer/Power-ups" unique_id=1570407764]
 offset_left = 528.0
 offset_top = 488.0
-offset_right = 592.0
-offset_bottom = 552.0
+offset_right = 720.0
+offset_bottom = 680.0
 scale = Vector2(0.25, 0.25)
 texture_normal = ExtResource("6_rb0md")
 
-[node name="Time Stop Uses" type="Sprite2D" parent="CanvasLayer/Time Stop" unique_id=909843550]
+[node name="Time Stop Uses" type="Sprite2D" parent="CanvasLayer/Power-ups/Time Stop" unique_id=909843550]
 scale = Vector2(0.75, 0.75)
 texture = ExtResource("5_rb0md")
 
-[node name="Number of Uses" type="Label" parent="CanvasLayer/Time Stop/Time Stop Uses" unique_id=1800355404]
+[node name="Number of Uses" type="Label" parent="CanvasLayer/Power-ups/Time Stop/Time Stop Uses" unique_id=1800355404]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -1321,19 +1323,19 @@ theme_override_font_sizes/font_size = 80
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Slip N\' Slide" type="TextureButton" parent="CanvasLayer" unique_id=31435853]
+[node name="Slip N\' Slide" type="TextureButton" parent="CanvasLayer/Power-ups" unique_id=31435853]
 offset_left = 528.0
 offset_top = 584.0
-offset_right = 592.0
-offset_bottom = 648.0
+offset_right = 720.0
+offset_bottom = 776.0
 scale = Vector2(0.25, 0.25)
 texture_normal = ExtResource("7_u5ghp")
 
-[node name="Slip N\' Slide Uses" type="Sprite2D" parent="CanvasLayer/Slip N\' Slide" unique_id=752733575]
+[node name="Slip N\' Slide Uses" type="Sprite2D" parent="CanvasLayer/Power-ups/Slip N\' Slide" unique_id=752733575]
 scale = Vector2(0.75, 0.75)
 texture = ExtResource("5_rb0md")
 
-[node name="Number of Uses" type="Label" parent="CanvasLayer/Slip N\' Slide/Slip N\' Slide Uses" unique_id=1122390888]
+[node name="Number of Uses" type="Label" parent="CanvasLayer/Power-ups/Slip N\' Slide/Slip N\' Slide Uses" unique_id=1122390888]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5

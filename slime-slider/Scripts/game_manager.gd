@@ -51,9 +51,9 @@ func _ready() -> void:
 	$"../CanvasLayer/Objective Label".text = str(level_settings.general_matches) + " Matches Left!"
 	$"../CanvasLayer/Highscore".text = "Extra Matches Highscore: " + str(LevelHighscores.get_highscores(level))
 	
-	$"../CanvasLayer/Sameification".pressed.connect(use_sameification)
-	#$"../CanvasLayer/Time Stop".pressed.connect(use_time_stop)
-	#$"../CanvasLayer/Slip N' Slide".pressed.connect(use_slip_n_slide)
+	$"../CanvasLayer/Power-ups/Sameification".pressed.connect(use_sameification)
+	$"../CanvasLayer/Power-ups/Time Stop".pressed.connect(use_time_stop)
+	$"../CanvasLayer/Power-ups/Slip N' Slide".pressed.connect(use_slip_n_slide)
 	update_powerups_ui()
 	
 	find_grid_gaps()
@@ -69,14 +69,14 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("sameification"):
 		use_sameification()
 	elif event.is_action_pressed("time_stop"):
-		pass #use_time_stop()
+		use_time_stop()
 	elif event.is_action_pressed("slip_n_slide"):
-		pass #use_slip_n_slide
+		use_slip_n_slide()
 
 func update_powerups_ui():
-	$"../CanvasLayer/Sameification/Sameification Uses/Number of Uses".text = str(powerups["sameification"])
-	$"../CanvasLayer/Time Stop/Time Stop Uses/Number of Uses".text = str(powerups["time_stop"])
-	$"../CanvasLayer/Slip N' Slide/Slip N' Slide Uses/Number of Uses".text = str(powerups["slip_n_slide"])
+	$"../CanvasLayer/Power-ups/Sameification/Sameification Uses/Number of Uses".text = str(powerups["sameification"])
+	$"../CanvasLayer/Power-ups/Time Stop/Time Stop Uses/Number of Uses".text = str(powerups["time_stop"])
+	$"../CanvasLayer/Power-ups/Slip N' Slide/Slip N' Slide Uses/Number of Uses".text = str(powerups["slip_n_slide"])
 
 func _process(delta: float) -> void:
 	if level_ended: 
@@ -86,7 +86,7 @@ func _process(delta: float) -> void:
 		time_stop_left -= delta
 		$"../CanvasLayer/Time Left Value".text = "STOPPED: " + str(roundi(time_stop_left))
 		if time_stop_left <= 0:
-			pass #end_time_stop
+			end_time_stop()
 		return
 	
 	if time_left > 0:
@@ -129,7 +129,7 @@ func cell_positions(column: int, row: int) -> Vector2:
 
 func on_slime_moved():
 	rebuild_grid()
-	await resolve_matches()
+	await after_board_change()
 
 func rebuild_grid():
 	for column in grid.size():
@@ -196,7 +196,7 @@ func pick_glowing_slimes():
 	if level_ended:
 		return
 	#filters out the already glowing slimes
-	var not_glowing_slimes = slimes.filter(func(slime): return not slime.is_glowing)
+	var not_glowing_slimes = slimes.filter(func(slime): return not slime.is_glowing and not slime.is_locked)
 	#will only pick slimes that arent already glowing
 	if not_glowing_slimes.is_empty():
 		return
@@ -206,6 +206,9 @@ func glowing_slime_cycle():
 	#gets called in ready and runs during the level to continually pick new glowing slimes
 	while time_left > 2.5:
 		await get_tree().create_timer(level_settings.pick_glow_interval).timeout
+		#no regular glow cycle during time_stop
+		if time_stopped:
+			continue
 		await pick_glowing_slimes()
 
 func on_slime_stopped_glowing(slime):
@@ -213,6 +216,9 @@ func on_slime_stopped_glowing(slime):
 	if slime == controlled_slime:
 		controlled_slime.unselect_slime()
 		controlled_slime = null
+	#in time_stop, pick a new slime to glow immediately after the old glow expires
+	if time_stopped and not slime.is_locked:
+		pick_glowing_slimes()
 
 
 func find_matches() -> Array:
@@ -302,6 +308,7 @@ func resolve_matches(award_powerups: bool = true):
 				earned_powerups.append_array(get_match_powerups(group))
 			apply_powerups(earned_powerups, matched_slimes)
 		
+		#moved here as some powerups/effects provide bonus matches
 		update_highscore_label()
 		
 		await fade_out_slimes(matched_slimes)
@@ -386,6 +393,12 @@ func cell_of(slime) -> Vector2i:
 		roundi((slime.position.x - start_spawn_x) / cell_size),
 		roundi((slime.position.y - start_spawn_y) / cell_size))
 
+#gets the slime in a specific cell
+func slime_at(cell: Vector2i):
+	if (cell.x < 0 or cell.x >= grid.size()) or (cell.y < 0 or cell.y >= grid[0].size()):
+		return null
+	return grid[cell.x][cell.y]
+
 #Power-up: matches of >3 in a line
 func get_matches(cells: Dictionary) -> Array:
 	var matches: Array = []
@@ -457,7 +470,7 @@ func get_powerups(cells: Dictionary) -> Array:
 				elif h_pos == "end" and v_pos == "end":
 					earned_powerups.append({"type": "slip_n_slide"})
 	
-	#big cross clears entire grid -> stop it from earning extra match bonuses the lines of 5+ get
+	#big cross clears entire grid so stop it from earning bonus matches the lines of 5+ get
 	if earned_powerups.any(func(e): return e["type"] == "big_cross"):
 		#give only the effects of big_cross and no clear_lines
 		earned_powerups = earned_powerups.filter(func(e): return e["type"] != "clear_lines")
@@ -476,15 +489,33 @@ func apply_powerups(earned_powerups: Array, matched_slimes: Array):
 		match powerup["type"]:
 			"sameification", "time_stop", "slip_n_slide":
 				powerups[powerup["type"]] += 1
-		update_powerups_ui()
+			"clear_lines":
+				general_matches_made += 1
+				add_cells_to_clear(clear_lines(powerup["match"]), matched_slimes)
+			"small_cross":
+				general_matches_made += 2
+				add_cells_to_clear(clear_crosses(powerup["centre"], 2), matched_slimes)
+			"big_cross":
+				general_matches_made += (maxi(level_settings.grid_columns, level_settings.grid_rows) - 1)
+				add_cells_to_clear(get_all_cells(), matched_slimes)
+	update_powerups_ui()
+
+#adds slimes that were part of special matches to be cleared
+func add_cells_to_clear(cells: Array, matched_slimes: Array):
+	for cell in cells:
+		var slime = slime_at(cell)
+		if slime != null and not matched_slimes.has(slime):
+			matched_slimes.append(slime)
+
+func get_all_cells():
+	var cells: Array = []
+	for column in grid.size():
+		for row in grid[column].size():
+			cells.append(Vector2i(column, row))
+	return cells
+
 
 #sameification powerup
-#gets the slime in a specific cell
-func slime_at(cell: Vector2i):
-	if (cell.x < 0 or cell.x >= grid.size()) or (cell.y < 0 or cell.y >= grid[0].size()):
-		return null
-	return grid[cell.x][cell.y]
-
 func use_sameification():
 	if (powerups["sameification"] <= 0 or controlled_slime == null or resolving_slimes or level_ended):
 		return
@@ -499,8 +530,93 @@ func use_sameification():
 			b_slime.set_colours_same(controlled_slime.slime_colour)
 			powerups["sameification"] -= 1
 			update_powerups_ui()
-			await resolve_matches()
+			await after_board_change()
 			return
+
+#time stop powerup
+func use_time_stop():
+	if powerups["time_stop"] <= 0 or time_stopped or resolving_slimes or level_ended:
+		return
+	powerups["time_stop"] -= 1
+	update_powerups_ui()
+	time_stopped = true
+	time_stop_left = 10.0
+
+func after_board_change():
+	if time_stopped:
+		handle_time_stopped_moves()
+	else:
+		await resolve_matches()
+
+#matches dont resolve yet in time stop, resolve all at once when it ends
+func handle_time_stopped_moves():
+	var newly_matched = 0
+	for group in find_matches():
+		for slime in group:
+			if not slime.is_locked:
+				lock_slime(slime)
+				newly_matched += 1
+	if newly_matched > 0:
+		pick_glowing_slimes()
+
+#so slimes locked into matches will not glow
+func lock_slime(slime):
+	slime.is_locked = true
+	slime.modulate = Color(0.6, 0.6, 0.6)
+	if slime.is_glowing:
+		slime.slime_stop_glowing()
+
+func end_time_stop():
+	time_stopped = false
+	for slime in slimes:
+		slime.is_locked = false
+		slime.modulate = Color.WHITE
+	await resolve_matches()
+
+#slip n' slide powerup
+func use_slip_n_slide():
+	if powerups["slip_n_slide"] <= 0 or slip_n_slide or level_ended:
+		return
+	powerups["slip_n_slide"] -= 1
+	update_powerups_ui()
+	slip_n_slide = true
+	set_speed(1.5)
+	await get_tree().create_timer(15.0).timeout
+	set_speed(1.0)
+	slip_n_slide = false
+
+func set_speed(multiplier: float):
+	speed_multiplier = multiplier
+	fade_time = base_fade_time / multiplier
+	drop_time = base_drop_time / multiplier
+	for slime in slimes:
+		slime.move_time = base_move_time / multiplier
+
+#lines of 5+ line clear effect
+func clear_lines(a_match: Dictionary) -> Array:
+	var matched_cells: Array = a_match["cells"]
+	var size = matched_cells.size()
+	
+	var centre_index = (size - 1) / 2
+	#pick one at random if the line match is of an even no. of slimes
+	if size % 2 == 0 and randi() % 2 == 0:
+		centre_index += 1
+	var centre: Vector2i = matched_cells[centre_index]
+	
+	var cells: Array = []
+	for column in grid.size():
+		cells.append(Vector2i(column, centre.y))
+	for row in grid[0].size():
+		cells.append(Vector2i(centre.x, row))
+	return cells
+
+#cross matches clear effect
+func clear_crosses(centre: Vector2i, radius: int) -> Array:
+	var cells: Array = []
+	for x in range(-radius, radius + 1):
+		for y in range(-radius, radius + 1):
+			cells.append(centre + Vector2i(x, y))
+	return cells
 
 
 func win_or_lose():

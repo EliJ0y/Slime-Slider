@@ -3,7 +3,11 @@
 [ext_resource type="Texture2D" uid="uid://50iagn18g2o4" path="res://Assets/BaseSet.png" id="1_icg2m"]
 [ext_resource type="PackedScene" uid="uid://dwabxrcbtrokp" path="res://Scenes/game_manager.tscn" id="2_2doy4"]
 [ext_resource type="Resource" uid="uid://b6ymfu2uoo0l" path="res://Resources/levels/level_10.tres" id="3_icg2m"]
+[ext_resource type="Texture2D" uid="uid://wudyon7726yy" path="res://Assets/sameification-icon.png" id="4_2fy10"]
 [ext_resource type="PackedScene" uid="uid://cl7jabvd81cfv" path="res://Scenes/UI/end_screen.tscn" id="4_snwp0"]
+[ext_resource type="Texture2D" uid="uid://b7b7nl2v8ynm4" path="res://Assets/powerup-uses-circle.png" id="5_l0dhx"]
+[ext_resource type="Texture2D" uid="uid://b8uwjttw46n53" path="res://Assets/time-stop-icon.png" id="6_p60k7"]
+[ext_resource type="Texture2D" uid="uid://kygjyo25uws5" path="res://Assets/slip-n-slide-icon.png" id="7_bla2a"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_iixi8"]
 texture = ExtResource("1_icg2m")
@@ -3626,6 +3630,92 @@ offset_right = -104.0
 offset_bottom = 274.0
 grow_horizontal = 2
 theme_override_font_sizes/font_size = 25
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Power-ups" type="Node2D" parent="CanvasLayer" unique_id=263083889]
+
+[node name="Sameification" type="TextureButton" parent="CanvasLayer/Power-ups" unique_id=563260050]
+offset_left = 528.0
+offset_top = 392.0
+offset_right = 720.0
+offset_bottom = 584.0
+scale = Vector2(0.25, 0.25)
+texture_normal = ExtResource("4_2fy10")
+
+[node name="Sameification Uses" type="Sprite2D" parent="CanvasLayer/Power-ups/Sameification" unique_id=1716746252]
+scale = Vector2(0.75, 0.75)
+texture = ExtResource("5_l0dhx")
+
+[node name="Number of Uses" type="Label" parent="CanvasLayer/Power-ups/Sameification/Sameification Uses" unique_id=1141188501]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -356.0
+offset_top = -242.5
+offset_right = -310.0
+offset_bottom = -132.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 80
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Time Stop" type="TextureButton" parent="CanvasLayer/Power-ups" unique_id=1382481637]
+offset_left = 528.0
+offset_top = 488.0
+offset_right = 720.0
+offset_bottom = 680.0
+scale = Vector2(0.25, 0.25)
+texture_normal = ExtResource("6_p60k7")
+
+[node name="Time Stop Uses" type="Sprite2D" parent="CanvasLayer/Power-ups/Time Stop" unique_id=1553745646]
+scale = Vector2(0.75, 0.75)
+texture = ExtResource("5_l0dhx")
+
+[node name="Number of Uses" type="Label" parent="CanvasLayer/Power-ups/Time Stop/Time Stop Uses" unique_id=1487465286]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -356.0
+offset_top = -242.5
+offset_right = -310.0
+offset_bottom = -132.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 80
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Slip N\' Slide" type="TextureButton" parent="CanvasLayer/Power-ups" unique_id=1565882683]
+offset_left = 528.0
+offset_top = 584.0
+offset_right = 720.0
+offset_bottom = 776.0
+scale = Vector2(0.25, 0.25)
+texture_normal = ExtResource("7_bla2a")
+
+[node name="Slip N\' Slide Uses" type="Sprite2D" parent="CanvasLayer/Power-ups/Slip N\' Slide" unique_id=412930851]
+scale = Vector2(0.75, 0.75)
+texture = ExtResource("5_l0dhx")
+
+[node name="Number of Uses" type="Label" parent="CanvasLayer/Power-ups/Slip N\' Slide/Slip N\' Slide Uses" unique_id=1276198771]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -356.0
+offset_top = -242.5
+offset_right = -310.0
+offset_bottom = -132.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 80
 horizontal_alignment = 1
 vertical_alignment = 1
 
