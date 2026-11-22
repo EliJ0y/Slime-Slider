@@ -27,9 +27,19 @@ var general_matches_made: int
 var time_left: float
 var level_ended = false
 
-var fade_time = 0.75
-var drop_time = 0.5
+var base_fade_time = 0.75
+var base_drop_time = 0.5
+var base_move_time = 0.2
+var fade_time = base_fade_time
+var drop_time = base_drop_time
 var resolving_slimes = false
+
+#powerups need to be reset every level
+var powerups: Dictionary = {"sameification": 0, "time_stop": 0, "slip_n_slide": 0}
+var time_stopped = false
+var time_stop_left = 0.0
+var slip_n_slide = false
+var speed_multiplier = 1.0
 
 var level: String
 
@@ -49,9 +59,26 @@ func _ready() -> void:
 	pick_glowing_slimes()
 	glowing_slime_cycle()
 
+func _unhandled_input(event: InputEvent) -> void:
+	#writing the funcs for the effects of each powerup later
+	if event.is_action_pressed("sameification"):
+		pass 
+	elif event.is_action_pressed("time_stop"):
+		pass
+	elif event.is_action_pressed("slip_n_slide"):
+		pass
+
 func _process(delta: float) -> void:
 	if level_ended: 
 		return
+	
+	if time_stopped:
+		time_stop_left -= delta
+		$"../CanvasLayer/Time Left Value".text = "STOPPED: " + str(roundi(time_stop_left))
+		if time_stop_left <= 0:
+			pass #writing the func to end time_stop later
+		return
+	
 	if time_left > 0:
 		time_left -= delta
 		if not general_matches_made >= level_settings.general_matches:
@@ -72,6 +99,7 @@ func create_slime(column: int, row: int):
 	new_slime.connect("move_slime_finished", on_slime_moved)
 	new_slime.connect("stopped_glowing", on_slime_stopped_glowing)
 	new_slime.glow_time = level_settings.glow_time
+	new_slime.move_time = base_move_time / speed_multiplier
 	slimes.append(new_slime)
 	return new_slime
 
@@ -351,7 +379,7 @@ func get_matches(cells: Dictionary) -> Array:
 			#while there are still more slimes to the right
 			while cells.has(matched_cells.back() + Vector2i.RIGHT):
 				matched_cells.append(matched_cells.back() + Vector2i.RIGHT)
-			if matched_cells.size() > 3:
+			if matched_cells.size() >= 3:
 				matches.append({"cells": matched_cells, "horizontal": true})
 			
 		#(vertical) start at the first slime in the match from top
@@ -360,7 +388,7 @@ func get_matches(cells: Dictionary) -> Array:
 			#while there are still more slimes to the bottom
 			while cells.has(matched_cells.back() + Vector2i.DOWN):
 				matched_cells.append(matched_cells.back() + Vector2i.DOWN)
-			if matched_cells.size() > 3:
+			if matched_cells.size() >= 3:
 				matches.append({"cells": matched_cells, "horizontal": false})
 	return matches
 
@@ -375,14 +403,14 @@ func position_in_match(matched_cells: Array, cell: Vector2i) -> String:
 
 func get_powerups(cells: Dictionary) -> Array:
 	var matches = get_matches(cells)
-	var powerups: Array = []
+	var earned_powerups: Array = []
 	
 	#powerups for straight line matches of 4 and 5
 	for a_match in matches:
-		if a_match.run.size() == 4:
-			powerups.append({"type": "sameification", "match": a_match})
-		if a_match.run.size() >= 5:
-			powerups.append({"type": "clear_lines", "match": a_match})
+		if a_match.cells.size() == 4:
+			earned_powerups.append({"type": "sameification", "match": a_match})
+		if a_match.cells.size() >= 5:
+			earned_powerups.append({"type": "clear_lines", "match": a_match})
 	
 	#checking the shapes of matches to assign powerups
 	for h in matches:
@@ -401,29 +429,34 @@ func get_powerups(cells: Dictionary) -> Array:
 				if h_pos == "centre" and v_pos == "centre":
 					#small cross: match of 3 through each direction
 					if h.cells.size() == 3 and v.cells.size() == 3:
-						powerups.append({"type": "small_cross", "centre": cell})
+						earned_powerups.append({"type": "small_cross", "centre": cell})
 					else:
 						#big cross: anything more than a match of 3
-						powerups.append({"type": "big_cross", "centre": cell})
+						earned_powerups.append({"type": "big_cross", "centre": cell})
 				#'T' match: the second match's end overlapping at centre of the first
 				elif (h_pos == "centre" and v_pos == "end") or (h_pos == "end" and v_pos == "centre"):
-					powerups.append({"type": "time_stop"})
+					earned_powerups.append({"type": "time_stop"})
 				#arrow tip match: both matches overlap at their ends
 				elif h_pos == "end" and v_pos == "end":
-					powerups.append({"type": "slip_n_slide"})
+					earned_powerups.append({"type": "slip_n_slide"})
 	
 	#big cross clears entire grid -> stop it from earning extra match bonuses the lines of 5+ get
-	if powerups.any(func(e): return e["type"] == "big_cross"):
+	if earned_powerups.any(func(e): return e["type"] == "big_cross"):
 		#give only the effects of big_cross and no clear_lines
-		powerups = powerups.filter(func(e): return e["type"] != "clear_lines")
+		earned_powerups = earned_powerups.filter(func(e): return e["type"] != "clear_lines")
 	
-	return powerups
+	return earned_powerups
 
 func get_match_powerups(matched_cells: Array) -> Array:
 	var cells: Dictionary = {}
 	for slime in matched_cells:
 		cells[cell_of(slime)] = true
 	return get_powerups(cells)
+
+func update_powerups_ui():
+	$"../CanvasLayer/Sameification/Sameification Uses/Number of Uses".text = str(powerups["sameification"])
+	$"../CanvasLayer/Time Stop/Time Stop Uses/Number of Uses".text = str(powerups["time_stop"])
+	$"../CanvasLayer/Slip N' Slide/Slip N' Slide Uses/Number of Uses".text = str(powerups["slip_n_slide"])
 
 
 func win_or_lose():
