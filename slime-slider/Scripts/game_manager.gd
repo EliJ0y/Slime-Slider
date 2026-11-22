@@ -334,6 +334,98 @@ func respawn_slimes():
 				create_tween().tween_property(new_slime, "modulate:a", 1.0, fade_time)
 
 
+#Power-ups code
+#gets the column and row of the slime
+func cell_of(slime) -> Vector2i:
+	return Vector2i(
+		roundi((slime.position.x - start_spawn_x) / cell_size),
+		roundi((slime.position.y - start_spawn_y) / cell_size))
+
+#Power-up: matches of >3 in a line
+func get_matches(cells: Dictionary) -> Array:
+	var matches: Array = []
+	for cell in cells:
+		#(horizontal) start at the first slime in the match from left
+		if not cells.has(cell + Vector2i.LEFT):
+			var matched_cells: Array = [cell]
+			#while there are still more slimes to the right
+			while cells.has(matched_cells.back() + Vector2i.RIGHT):
+				matched_cells.append(matched_cells.back() + Vector2i.RIGHT)
+			if matched_cells.size() > 3:
+				matches.append({"cells": matched_cells, "horizontal": true})
+			
+		#(vertical) start at the first slime in the match from top
+		if not cells.has(cell + Vector2i.UP):
+			var matched_cells: Array = [cell]
+			#while there are still more slimes to the bottom
+			while cells.has(matched_cells.back() + Vector2i.DOWN):
+				matched_cells.append(matched_cells.back() + Vector2i.DOWN)
+			if matched_cells.size() > 3:
+				matches.append({"cells": matched_cells, "horizontal": false})
+	return matches
+
+#check if the slime is at one of the ends or centre or neither
+func position_in_match(matched_cells: Array, cell: Vector2i) -> String:
+	var index = matched_cells.find(cell)
+	if index == 0 or index == matched_cells.size() - 1:
+		return "end"
+	if abs(index * 2 - (matched_cells.size() - 1)) <= 1:
+		return "centre"
+	return "other"
+
+func get_powerups(cells: Dictionary) -> Array:
+	var matches = get_matches(cells)
+	var powerups: Array = []
+	
+	#powerups for straight line matches of 4 and 5
+	for a_match in matches:
+		if a_match.run.size() == 4:
+			powerups.append({"type": "sameification", "match": a_match})
+		if a_match.run.size() >= 5:
+			powerups.append({"type": "clear_lines", "match": a_match})
+	
+	#checking the shapes of matches to assign powerups
+	for h in matches:
+		if not h.horizontal:
+			continue
+		for v in matches:
+			if v.horizontal:
+				continue
+			for cell in h.cells:
+				#if no overlapping matches and the match is just in one direction
+				if not v.cells.has(cell):
+					continue
+				var h_pos = position_in_match(h.cells, cell)
+				var v_pos = position_in_match(v.cells, cell)
+				
+				if h_pos == "centre" and v_pos == "centre":
+					#small cross: match of 3 through each direction
+					if h.cells.size() == 3 and v.cells.size() == 3:
+						powerups.append({"type": "small_cross", "centre": cell})
+					else:
+						#big cross: anything more than a match of 3
+						powerups.append({"type": "big_cross", "centre": cell})
+				#'T' match: the second match's end overlapping at centre of the first
+				elif (h_pos == "centre" and v_pos == "end") or (h_pos == "end" and v_pos == "centre"):
+					powerups.append({"type": "time_stop"})
+				#arrow tip match: both matches overlap at their ends
+				elif h_pos == "end" and v_pos == "end":
+					powerups.append({"type": "slip_n_slide"})
+	
+	#big cross clears entire grid -> stop it from earning extra match bonuses the lines of 5+ get
+	if powerups.any(func(e): return e["type"] == "big_cross"):
+		#give only the effects of big_cross and no clear_lines
+		powerups = powerups.filter(func(e): return e["type"] != "clear_lines")
+	
+	return powerups
+
+func get_match_powerups(matched_cells: Array) -> Array:
+	var cells: Dictionary = {}
+	for slime in matched_cells:
+		cells[cell_of(slime)] = true
+	return get_powerups(cells)
+
+
 func win_or_lose():
 	if time_left <= 0:
 		$"../CanvasLayer/Time Left label".visible = false
