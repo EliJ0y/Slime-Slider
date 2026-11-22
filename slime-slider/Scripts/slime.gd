@@ -13,10 +13,11 @@ var slime_colours: Array = [green_slime, blue_slime, yellow_slime, red_slime, pu
 @export var slime_colour: int
 
 const cell_size = 64
-const move_time = 0.2
+var move_time = 0.2
 
 var is_moving = false
 var is_glowing = false
+var is_locked = false
 var glow_time = 2.0
 
 var slime_selected = false
@@ -48,7 +49,7 @@ func get_input():
 
 #checks for the direction across the whole swipe to reduce wrong movement
 func _input(event) -> void:
-	if is_moving or !slime_selected:
+	if !slime_selected:
 		return
 	
 	#checks for a new screen touch
@@ -87,6 +88,9 @@ func move_one_tile(direction: Vector2i):
 	if test_move(global_transform, offset, collision):
 		var collided_object = collision.get_collider()
 		if collided_object is CharacterBody2D:
+			#locked in a match during time stop
+			if collided_object.is_locked:
+				return
 			#move other slime first so controlled slime's global position hasnt updated yet
 			collided_object.move_animation(global_position)
 			#then move the controlled slime like normal
@@ -118,7 +122,7 @@ func _physics_process(delta: float) -> void:
 	get_input()
 
 func slime_glowing():
-	if !is_glowing:
+	if !is_glowing and !is_locked:
 		is_glowing = true
 		$"White Border".visible = true
 		await get_tree().create_timer(glow_time).timeout
@@ -129,3 +133,8 @@ func slime_stop_glowing():
 	$"White Border".visible = false
 	#sends signal to game_manager.gd when a slime stops glowing
 	stopped_glowing.emit(self) 
+
+#to change the colours of neighbouring slimes during sameification
+func set_colours_same(new_colour: int):
+	slime_colour = new_colour
+	$"Slime Sprite".texture = slime_colours[slime_colour]

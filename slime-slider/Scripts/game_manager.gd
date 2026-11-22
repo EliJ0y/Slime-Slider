@@ -51,6 +51,12 @@ func _ready() -> void:
 	$"../CanvasLayer/Objective Label".text = str(level_settings.general_matches) + " Matches Left!"
 	$"../CanvasLayer/Highscore".text = "Extra Matches Highscore: " + str(LevelHighscores.get_highscores(level))
 	
+	$"../CanvasLayer/Sameification".pressed.connect(use_sameification)
+	#$"../CanvasLayer/Time Stop".pressed.connect(use_time_stop)
+	#$"../CanvasLayer/Slip N' Slide".pressed.connect(use_slip_n_slide)
+	powerups["sameification"] = 3
+	update_powerups_ui()
+	
 	find_grid_gaps()
 	spawn_slimes()
 	await resolve_matches()
@@ -62,11 +68,16 @@ func _ready() -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	#writing the funcs for the effects of each powerup later
 	if event.is_action_pressed("sameification"):
-		pass 
+		use_sameification()
 	elif event.is_action_pressed("time_stop"):
-		pass
+		pass #use_time_stop()
 	elif event.is_action_pressed("slip_n_slide"):
-		pass
+		pass #use_slip_n_slide
+
+func update_powerups_ui():
+	$"../CanvasLayer/Sameification/Sameification Uses/Number of Uses".text = str(powerups["sameification"])
+	$"../CanvasLayer/Time Stop/Time Stop Uses/Number of Uses".text = str(powerups["time_stop"])
+	$"../CanvasLayer/Slip N' Slide/Slip N' Slide Uses/Number of Uses".text = str(powerups["slip_n_slide"])
 
 func _process(delta: float) -> void:
 	if level_ended: 
@@ -76,7 +87,7 @@ func _process(delta: float) -> void:
 		time_stop_left -= delta
 		$"../CanvasLayer/Time Left Value".text = "STOPPED: " + str(roundi(time_stop_left))
 		if time_stop_left <= 0:
-			pass #writing the func to end time_stop later
+			pass #end_time_stop
 		return
 	
 	if time_left > 0:
@@ -453,10 +464,29 @@ func get_match_powerups(matched_cells: Array) -> Array:
 		cells[cell_of(slime)] = true
 	return get_powerups(cells)
 
-func update_powerups_ui():
-	$"../CanvasLayer/Sameification/Sameification Uses/Number of Uses".text = str(powerups["sameification"])
-	$"../CanvasLayer/Time Stop/Time Stop Uses/Number of Uses".text = str(powerups["time_stop"])
-	$"../CanvasLayer/Slip N' Slide/Slip N' Slide Uses/Number of Uses".text = str(powerups["slip_n_slide"])
+#sameification powerup
+#gets the slime in a specific cell
+func slime_at(cell: Vector2i):
+	if (cell.x < 0 or cell.x >= grid.size()) or (cell.y < 0 or cell.y >= grid[0].size()):
+		return null
+	return grid[cell.x][cell.y]
+
+func use_sameification():
+	if (powerups["sameification"] <= 0 or controlled_slime == null or resolving_slimes or level_ended):
+		return
+	
+	var cell = cell_of(controlled_slime)
+	#try left and right, then above and below
+	for pair in [[Vector2i.LEFT, Vector2i.RIGHT], [Vector2i.UP, Vector2i.DOWN]]:
+		var left_right = slime_at(cell + pair[0])
+		var up_down = slime_at(cell + pair[1])
+		if (left_right != null and up_down != null) and (not left_right.is_locked and not up_down.is_locked):
+			left_right.set_colours_same(controlled_slime.slime_colour)
+			up_down.set_colours_same(controlled_slime.slime_colour)
+			powerups["sameification"] -= 1
+			update_powerups_ui()
+			await resolve_matches()
+			return
 
 
 func win_or_lose():
