@@ -1,13 +1,13 @@
 [gd_scene format=4 uid="uid://cmt2hvomaceev"]
 
 [ext_resource type="Texture2D" uid="uid://50iagn18g2o4" path="res://Assets/BaseSet.png" id="2_4dpyx"]
-[ext_resource type="Texture2D" uid="uid://dr8kn8gfifu1w" path="res://Assets/green-slime.png" id="4_5f3p6"]
 [ext_resource type="Resource" uid="uid://cy72btuyxo34y" path="res://Resources/levels/level_1.tres" id="4_cyadu"]
 [ext_resource type="PackedScene" uid="uid://dwabxrcbtrokp" path="res://Scenes/game_manager.tscn" id="4_iixi8"]
+[ext_resource type="Texture2D" uid="uid://wudyon7726yy" path="res://Assets/sameification-icon.png" id="4_jv26f"]
 [ext_resource type="PackedScene" uid="uid://cl7jabvd81cfv" path="res://Scenes/UI/end_screen.tscn" id="5_5f3p6"]
-[ext_resource type="Texture2D" uid="uid://dd86wvbfpoyrk" path="res://Assets/blue-slime.png" id="5_jv26f"]
 [ext_resource type="Texture2D" uid="uid://b7b7nl2v8ynm4" path="res://Assets/powerup-uses-circle.png" id="5_rb0md"]
-[ext_resource type="Texture2D" uid="uid://no070bylaud0" path="res://Assets/purple-slime.png" id="6_rb0md"]
+[ext_resource type="Texture2D" uid="uid://b8uwjttw46n53" path="res://Assets/time-stop-icon.png" id="6_rb0md"]
+[ext_resource type="Texture2D" uid="uid://kygjyo25uws5" path="res://Assets/slip-n-slide-icon.png" id="7_u5ghp"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_iixi8"]
 texture = ExtResource("2_4dpyx")
@@ -1270,11 +1270,11 @@ offset_left = 528.0
 offset_top = 392.0
 offset_right = 592.0
 offset_bottom = 456.0
-scale = Vector2(0.75, 0.75)
-texture_normal = ExtResource("4_5f3p6")
+scale = Vector2(0.25, 0.25)
+texture_normal = ExtResource("4_jv26f")
 
 [node name="Sameification Uses" type="Sprite2D" parent="CanvasLayer/Sameification" unique_id=62349408]
-scale = Vector2(0.3, 0.3)
+scale = Vector2(0.75, 0.75)
 texture = ExtResource("5_rb0md")
 
 [node name="Number of Uses" type="Label" parent="CanvasLayer/Sameification/Sameification Uses" unique_id=2010354398]
@@ -1298,11 +1298,11 @@ offset_left = 528.0
 offset_top = 488.0
 offset_right = 592.0
 offset_bottom = 552.0
-scale = Vector2(0.75, 0.75)
-texture_normal = ExtResource("5_jv26f")
+scale = Vector2(0.25, 0.25)
+texture_normal = ExtResource("6_rb0md")
 
 [node name="Time Stop Uses" type="Sprite2D" parent="CanvasLayer/Time Stop" unique_id=909843550]
-scale = Vector2(0.3, 0.3)
+scale = Vector2(0.75, 0.75)
 texture = ExtResource("5_rb0md")
 
 [node name="Number of Uses" type="Label" parent="CanvasLayer/Time Stop/Time Stop Uses" unique_id=1800355404]
@@ -1326,11 +1326,11 @@ offset_left = 528.0
 offset_top = 584.0
 offset_right = 592.0
 offset_bottom = 648.0
-scale = Vector2(0.75, 0.75)
-texture_normal = ExtResource("6_rb0md")
+scale = Vector2(0.25, 0.25)
+texture_normal = ExtResource("7_u5ghp")
 
 [node name="Slip N\' Slide Uses" type="Sprite2D" parent="CanvasLayer/Slip N\' Slide" unique_id=752733575]
-scale = Vector2(0.3, 0.3)
+scale = Vector2(0.75, 0.75)
 texture = ExtResource("5_rb0md")
 
 [node name="Number of Uses" type="Label" parent="CanvasLayer/Slip N\' Slide/Slip N\' Slide Uses" unique_id=1122390888]

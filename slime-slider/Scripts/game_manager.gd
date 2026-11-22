@@ -54,12 +54,11 @@ func _ready() -> void:
 	$"../CanvasLayer/Sameification".pressed.connect(use_sameification)
 	#$"../CanvasLayer/Time Stop".pressed.connect(use_time_stop)
 	#$"../CanvasLayer/Slip N' Slide".pressed.connect(use_slip_n_slide)
-	powerups["sameification"] = 3
 	update_powerups_ui()
 	
 	find_grid_gaps()
 	spawn_slimes()
-	await resolve_matches()
+	await resolve_matches(false)
 	
 	await get_tree().create_timer(1.0).timeout
 	pick_glowing_slimes()
@@ -279,7 +278,7 @@ func save_colours_adjacent(colours_adjacent: Array, matched_slimes_groups: Array
 	matched_slimes_groups.append(merged_slime_group)
 
 
-func resolve_matches():
+func resolve_matches(award_powerups: bool = true):
 	if resolving_slimes:
 		return
 	resolving_slimes = true
@@ -291,12 +290,19 @@ func resolve_matches():
 	while not matched_slimes_groups.is_empty():
 		#adds a point for each unique match
 		general_matches_made += matched_slimes_groups.size()
-		update_highscore_label()
 		
 		var matched_slimes: Array = []
 		for group in matched_slimes_groups:
 			#makes sure each slime is appended individually and not in a lump group
 			matched_slimes.append_array(group)
+		
+		if award_powerups:
+			var earned_powerups: Array = []
+			for group in matched_slimes_groups:
+				earned_powerups.append_array(get_match_powerups(group))
+			apply_powerups(earned_powerups, matched_slimes)
+		
+		update_highscore_label()
 		
 		await fade_out_slimes(matched_slimes)
 		drop_slimes()
@@ -464,6 +470,14 @@ func get_match_powerups(matched_cells: Array) -> Array:
 		cells[cell_of(slime)] = true
 	return get_powerups(cells)
 
+#checks which and then adds uses to the powerup earned 
+func apply_powerups(earned_powerups: Array, matched_slimes: Array):
+	for powerup in earned_powerups:
+		match powerup["type"]:
+			"sameification", "time_stop", "slip_n_slide":
+				powerups[powerup["type"]] += 1
+		update_powerups_ui()
+
 #sameification powerup
 #gets the slime in a specific cell
 func slime_at(cell: Vector2i):
@@ -478,11 +492,11 @@ func use_sameification():
 	var cell = cell_of(controlled_slime)
 	#try left and right, then above and below
 	for pair in [[Vector2i.LEFT, Vector2i.RIGHT], [Vector2i.UP, Vector2i.DOWN]]:
-		var left_right = slime_at(cell + pair[0])
-		var up_down = slime_at(cell + pair[1])
-		if (left_right != null and up_down != null) and (not left_right.is_locked and not up_down.is_locked):
-			left_right.set_colours_same(controlled_slime.slime_colour)
-			up_down.set_colours_same(controlled_slime.slime_colour)
+		var a_slime = slime_at(cell + pair[0])
+		var b_slime = slime_at(cell + pair[1])
+		if (a_slime != null and b_slime != null) and (not a_slime.is_locked and not b_slime.is_locked):
+			a_slime.set_colours_same(controlled_slime.slime_colour)
+			b_slime.set_colours_same(controlled_slime.slime_colour)
 			powerups["sameification"] -= 1
 			update_powerups_ui()
 			await resolve_matches()
