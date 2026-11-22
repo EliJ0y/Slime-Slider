@@ -10,16 +10,27 @@ How to play:
 4. Click the next glowing slime after making a match or if the glow faded from your controlled slime
 5. Try to meet the objective before the timer runs out!
 
-Explanation on the power-ups/effects:
-Controls: 
-Click on the icons at the right of the game area or use Q for "Sameification", E for "Time Stop", R for "Slip N' Slide"
+
+Controls of power-ups:
+
+Click on icons at the right of the game area or use Q for "Sameification", E for "Time Stop", R for "Slip N' Slide"
+
+/
+
+Explanations of the power-ups/effects:
 
 **Lines of 4:** adds 1 use to the "Sameification" power-up, the top-most icon. When controlling a slime, use this power-up to make the neighbouring slimes transform into the same colour, providing a match.
+
 **Lines of 5+:** clears the entire row/column where the match is and also the centre row/column of that match (which will also count as a match). 
+
 **'T' shape:** adds 1 use to the "Time Stop" power-up, the middle icon. This power-up stops the timer countdown for 10 seconds, where the player can still move glowing slimes but any matches made only resolve once the power-up ends.
+
 **Arrow tip shape:** adds 1 use to the "Slip N' Slide" power-up, the bottom-most icon. This power-up provides a speed boost for 15 seconds, where any slime the player moves goes faster and matches also resolve faster.
+
 **Small cross shape:** clears the slimes in a 2-slime radius from the centre slime, providing 2 bonus matches on top of the initial cross match.
+
 **Big cross shape:** clears the entire grid, providing bonus matches calculated to be the higher of either the grid's rows or columns then minus one, on top of the initial cross match
+
 
 There are 16 levels in the game currently with a tutorial. The difficulty increases as you progress. Mobile functionality is there but will most likely be slower than using a keyboard.
 
