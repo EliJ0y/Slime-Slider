@@ -54,11 +54,13 @@ func _ready() -> void:
 	$"../CanvasLayer/Power-ups/Sameification".pressed.connect(use_sameification)
 	$"../CanvasLayer/Power-ups/Time Stop".pressed.connect(use_time_stop)
 	$"../CanvasLayer/Power-ups/Slip N' Slide".pressed.connect(use_slip_n_slide)
+	powerups["time_stop"] += 1
+	powerups["slip_n_slide"] += 1
 	update_powerups_ui()
 	
 	find_grid_gaps()
 	spawn_slimes()
-	await resolve_matches(false)
+	await resolve_matches()
 	
 	await get_tree().create_timer(1.0).timeout
 	pick_glowing_slimes()
@@ -189,11 +191,14 @@ func on_slime_clicked():
 		controlled_slime = clicked_slime 
 		controlled_slime.on_slime_selected()
 
-func pick_glowing_slimes():
+func pick_glowing_slimes(only_when_none_glowing: bool = false):
 	#wait for the board to go back to normal then glow to reduce waiting time
 	while resolving_slimes:
 		await get_tree().process_frame
 	if level_ended:
+		return
+	#only_when_none_glowing is set to true at places where glows would have stopped
+	if only_when_none_glowing and slimes.any(func(slime): return slime.is_glowing):
 		return
 	#filters out the already glowing slimes
 	var not_glowing_slimes = slimes.filter(func(slime): return not slime.is_glowing and not slime.is_locked)
@@ -218,7 +223,7 @@ func on_slime_stopped_glowing(slime):
 		controlled_slime = null
 	#in time_stop, pick a new slime to glow immediately after the old glow expires
 	if time_stopped and not slime.is_locked:
-		pick_glowing_slimes()
+		pick_glowing_slimes(true)
 
 
 func find_matches() -> Array:
@@ -541,6 +546,7 @@ func use_time_stop():
 	update_powerups_ui()
 	time_stopped = true
 	time_stop_left = 10.0
+	$"../CanvasLayer/Power-ups/Time Stop/Time Stop Panel".visible = true
 
 func after_board_change():
 	if time_stopped:
@@ -557,7 +563,7 @@ func handle_time_stopped_moves():
 				lock_slime(slime)
 				newly_matched += 1
 	if newly_matched > 0:
-		pick_glowing_slimes()
+		pick_glowing_slimes(true)
 
 #so slimes locked into matches will not glow
 func lock_slime(slime):
@@ -571,6 +577,7 @@ func end_time_stop():
 	for slime in slimes:
 		slime.is_locked = false
 		slime.modulate = Color.WHITE
+	$"../CanvasLayer/Power-ups/Time Stop/Time Stop Panel".visible = false
 	await resolve_matches()
 
 #slip n' slide powerup
@@ -581,6 +588,9 @@ func use_slip_n_slide():
 	update_powerups_ui()
 	slip_n_slide = true
 	set_speed(1.5)
+	$"../CanvasLayer/Power-ups/Slip N' Slide/Slip N' Slide Panel".visible = true
+	await get_tree().create_timer(0.5).timeout
+	$"../CanvasLayer/Power-ups/Slip N' Slide/Slip N' Slide Panel".visible = false
 	await get_tree().create_timer(15.0).timeout
 	set_speed(1.0)
 	slip_n_slide = false
@@ -625,6 +635,10 @@ func win_or_lose():
 		$"../CanvasLayer/Time Left Value".visible = false
 		$"../CanvasLayer/Objective Label".visible = false
 		$"../CanvasLayer/Highscore". visible = false
+		$"../CanvasLayer/Power-ups/Sameification".visible = false
+		$"../CanvasLayer/Power-ups/Time Stop".visible = false
+		$"../CanvasLayer/Power-ups/Slip N' Slide".visible = false
+		
 		level_ended = true
 		if general_matches_made >= level_settings.general_matches:
 			var extra_matches = general_matches_made - level_settings.general_matches

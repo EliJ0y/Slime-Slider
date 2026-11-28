@@ -19,6 +19,7 @@ var is_moving = false
 var is_glowing = false
 var is_locked = false
 var glow_time = 2.0
+var glow_timer: Timer #so each slime's glow stops after the correct duration
 
 var slime_selected = false
 var swipe_total_distance := Vector2.ZERO
@@ -29,6 +30,11 @@ func _ready() -> void:
 	$"Slime Sprite".texture = slime_colours[slime_colour]
 	set_physics_process(false)
 	$"White Border".visible = false
+	
+	glow_timer = Timer.new()
+	glow_timer.one_shot = true
+	add_child(glow_timer)
+	glow_timer.timeout.connect(slime_stop_glowing)
 
 func get_input():
 	if is_moving:
@@ -125,10 +131,10 @@ func slime_glowing():
 	if !is_glowing and !is_locked:
 		is_glowing = true
 		$"White Border".visible = true
-		await get_tree().create_timer(glow_time).timeout
-		slime_stop_glowing()
+		glow_timer.start(glow_time)
 
 func slime_stop_glowing():
+	glow_timer.stop()
 	is_glowing = false
 	$"White Border".visible = false
 	#sends signal to game_manager.gd when a slime stops glowing
