@@ -2492,13 +2492,13 @@ offset_bottom = 540.0
 theme_override_font_sizes/font_size = 60
 text = "Replay"
 
-[node name="Level 1 Button" type="Button" parent="Tutorial End Screen" unique_id=2139227120]
+[node name="Next Level Button" type="Button" parent="Tutorial End Screen" unique_id=2139227120]
 offset_left = 144.0
 offset_top = 574.0
 offset_right = 432.0
 offset_bottom = 692.0
 theme_override_font_sizes/font_size = 60
-text = "Level 1"
+text = "Next Level"
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=940067801]
 position = Vector2(288, 512)
@@ -2514,4 +2514,4 @@ tile_map_data = PackedByteArray("AAAyACkAAAATABoAAAAzACgAAAAUABoAAAAzACkAAAAQABo
 tile_set = SubResource("TileSet_p1f1o")
 
 [connection signal="pressed" from="Tutorial End Screen/Replay Button" to="." method="_on_replay_button_pressed"]
-[connection signal="pressed" from="Tutorial End Screen/Level 1 Button" to="." method="_on_level_1_button_pressed"]
+[connection signal="pressed" from="Tutorial End Screen/Next Level Button" to="." method="_on_next_level_button_pressed"]

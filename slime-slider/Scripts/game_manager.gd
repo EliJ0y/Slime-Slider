@@ -54,8 +54,6 @@ func _ready() -> void:
 	$"../CanvasLayer/Power-ups/Sameification".pressed.connect(use_sameification)
 	$"../CanvasLayer/Power-ups/Time Stop".pressed.connect(use_time_stop)
 	$"../CanvasLayer/Power-ups/Slip N' Slide".pressed.connect(use_slip_n_slide)
-	powerups["time_stop"] += 1
-	powerups["slip_n_slide"] += 1
 	update_powerups_ui()
 	
 	find_grid_gaps()
@@ -542,6 +540,7 @@ func use_sameification():
 func use_time_stop():
 	if powerups["time_stop"] <= 0 or time_stopped or resolving_slimes or level_ended:
 		return
+	
 	powerups["time_stop"] -= 1
 	update_powerups_ui()
 	time_stopped = true
@@ -584,6 +583,7 @@ func end_time_stop():
 func use_slip_n_slide():
 	if powerups["slip_n_slide"] <= 0 or slip_n_slide or level_ended:
 		return
+	
 	powerups["slip_n_slide"] -= 1
 	update_powerups_ui()
 	slip_n_slide = true

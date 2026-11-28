@@ -38,16 +38,16 @@ func _ready() -> void:
 	slime_5.slime_glowing()
 	
 	tutorial_text.visible = true
-	tutorial_text.text = "Hey, look! A \n slime is glowing!"
+	tutorial_text.text = "Hey, look! A\nslime is glowing!"
 	await get_tree().create_timer(2.0).timeout
 	if !slime_selected:
 		tutorial_text.text = "Click on it"
 
 func _process(delta: float) -> void:
 	if matches_made == 1:
-		tutorial_text.text = "Nice one! \n Make two more"
+		tutorial_text.text = "Nice one!\nMake two more"
 	if matches_made == 2:
-		tutorial_text.text = "Just one \n more to go!"
+		tutorial_text.text = "Just one\nmore to go!"
 
 
 func setup_grid():
@@ -81,7 +81,7 @@ func on_slime_moved():
 	await resolve_matches()
 
 	if matches_made >= 3:
-		tutorial_text.text = "Great job! \n On to level 1!"
+		tutorial_text.text = "Great job!\nOn to the next!"
 		finish_tutorial()
 	elif matches_made >= 1 and !random_glow_started:
 		random_glow_started = true
@@ -119,7 +119,7 @@ func on_slime_clicked():
 		
 		if !slime_selected:
 			slime_selected = true
-			tutorial_text.text = "Swipe, use WASD, or \n arrow keys to move it"
+			tutorial_text.text = "Swipe, use WASD, or\narrow keys to move it"
 		await get_tree().create_timer(2.0).timeout
 		if matches_made == 0:
 			tutorial_text.text = "Make a match!"
@@ -298,5 +298,5 @@ func finish_tutorial():
 func _on_replay_button_pressed() -> void:
 	get_tree().reload_current_scene()
 
-func _on_level_1_button_pressed() -> void:
+func _on_next_level_button_pressed() -> void:
 	get_tree().change_scene_to_file(level_settings.next_level_path)
